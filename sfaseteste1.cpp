@@ -14,11 +14,13 @@ void SFaseTeste1::draw(float dt)
 
 void SFaseTeste1::update(float dt)
 {
-    //
+    player->update(dt);
 }
 
 void SFaseTeste1::handleInput()
 {
     if( sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) )
         GameInstance::get().window.close();
+
+    player->handleMovement();
 }

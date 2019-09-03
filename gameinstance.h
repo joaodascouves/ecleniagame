@@ -26,8 +26,10 @@ public:
     void popState();
 
     GameState* peekState();
-
     void gameLoop();
+
+    float fps;
+    unsigned long tick;
 };
 
 #endif // GAMEINSTANCE_H

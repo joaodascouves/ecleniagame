@@ -7,7 +7,7 @@ GameInstance::GameInstance()
     settings.antialiasingLevel = 8;
 
     window.create(sf::VideoMode(800, 600, 32), "teste", sf::Style::Default, settings);
-    window.setFramerateLimit(60);
+    window.setFramerateLimit(100);
 }
 
 void GameInstance::changeState(GameState *newState)
@@ -44,18 +44,21 @@ void GameInstance::gameLoop()
 
     while( window.isOpen() )
     {
-        sf::Time elapsed = clock.restart();
-        float dt = elapsed.asSeconds();
+        float currentTime = clock.restart().asSeconds();
+        fps = 1.f/currentTime;
 
         if( peekState() == nullptr )
             continue;
 
         peekState()->handleInput();
-        peekState()->update(dt);
+        peekState()->update(fps);
         window.clear();
 
-        peekState()->draw(dt);
+        peekState()->draw(fps);
         window.display();
+
+        if( ++tick >= 9999999 )
+            tick = 0;
     }
 
 }

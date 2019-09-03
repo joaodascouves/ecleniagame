@@ -4,6 +4,7 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += \
+        animation.cpp \
         entity.cpp \
         eplayable.cpp \
         gameinstance.cpp \
@@ -15,6 +16,7 @@ SOURCES += \
 LIBS += -lsfml-system -lsfml-window -lsfml-graphics
 
 HEADERS += \
+    animation.h \
     entity.h \
     eplayable.h \
     gameinstance.h \

@@ -4,6 +4,8 @@
 #include "gamestate.h"
 #include "eplayable.h"
 
+#include <vector>
+
 class SFaseTeste1 : public GameState
 {
 public:

@@ -12,6 +12,10 @@ public:
 
     T* drawableObject = new T;
 
+    enum { D_LEFT = -1, D_RIGHT = 1 };
+    short direction = D_RIGHT;
+
+    virtual void flipHorizontally();
     virtual void update(const float dt){};
 
 protected:
