@@ -13,17 +13,9 @@ public:
     T* drawableObject = new T;
 
     enum { D_LEFT = -1, D_RIGHT = 1 };
-    enum
-    {
-        S_RUNNING,
-        S_STANDING,
-        S_WALKING,
-        S_JUMPING,
-        S_FALLING
-    };
 
     short direction = D_RIGHT;
-    short status = S_STANDING;
+    short status = -1;
     short previousStatus = -1;
 
     virtual void flipHorizontally();
@@ -44,5 +36,6 @@ protected:
 };
 
 template class Entity<sf::Sprite>;
+template class Entity<sf::RectangleShape>;
 
 #endif // ENTITY_H

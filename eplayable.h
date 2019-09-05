@@ -9,10 +9,21 @@ public:
     EPlayable();
     virtual ~EPlayable(){}
 
+    enum
+    {
+        S_RUNNING,
+        S_STANDING,
+        S_WALKING,
+        S_JUMPING,
+        S_FALLING
+    };
+
     virtual void update(const float dt);
     virtual void handleMovement();
     virtual void moveLeft();
     virtual void moveRight();
+
+    virtual void triggerAction();
 };
 
 #endif // EPLAYABLE_H

@@ -24,7 +24,18 @@ void Animation::tickAnimation()
 
 void Animation::tickAnimation(int tickMod)
 {
+    tickAnimation(20, false);
+}
+
+void Animation::tickAnimation(int tickMod, bool runOnce)
+{
+    if( runOnce && sequences.at(currentSequence).pos >= sequences.at(currentSequence).end )
+        return;
+
     if( !(GameInstance::get().tick%tickMod) )
     if( ++sequences.at(currentSequence).pos >= sequences.at(currentSequence).end )
-        sequences.at(currentSequence).pos = sequences.at(currentSequence).begin;
+    {
+        if( !runOnce ) sequences.at(currentSequence).pos = sequences.at(currentSequence).begin;
+        else sequences.at(currentSequence).pos = sequences.at(currentSequence).end - 1;
+    }
 }

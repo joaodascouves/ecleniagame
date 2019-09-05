@@ -11,9 +11,8 @@ EPlayable::EPlayable()
 
     drawableObject->setOrigin(500.f, 0);
     drawableObject->setTexture(*TextureManager::get().textureMap.at("agoravai"));
-    drawableObject->setScale(.2f, .2f);
+    drawableObject->setScale(.23f, .23f);
     drawableObject->setTextureRect(sf::IntRect(0 + 5, 0, 399 - 5, 369));
-    setPosition(20, 425);
 
     sequences.push_back({0, 5, 11, 0});
     sequences.push_back({0, 0, 4, 0});
@@ -54,4 +53,9 @@ void EPlayable::handleMovement()
 
     if( sf::Keyboard::isKeyPressed(sf::Keyboard::Right) )
         moveRight();
+}
+
+void EPlayable::triggerAction()
+{
+    //
 }

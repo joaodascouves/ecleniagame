@@ -30,6 +30,8 @@ public:
     sf::IntRect currentFrame();
     void tickAnimation();
     void tickAnimation(int);
+    void tickAnimation(int, bool);
+
 //    void setAnimationSize(int, int);
 
 
