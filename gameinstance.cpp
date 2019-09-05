@@ -6,7 +6,7 @@ GameInstance::GameInstance()
     sf::ContextSettings settings;
     settings.antialiasingLevel = 8;
 
-    window.create(sf::VideoMode(800, 600, 32), "teste", sf::Style::Default, settings);
+    window.create(sf::VideoMode(1024, 728, 32), "teste", sf::Style::Fullscreen, settings);
     window.setFramerateLimit(100);
 }
 

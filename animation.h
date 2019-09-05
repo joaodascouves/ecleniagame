@@ -12,7 +12,6 @@ public:
     int frames;
     int frameWidth;
     int frameHeight;
-    int frameCount = 0;
 
     int currentSequence = 0;
 
@@ -22,12 +21,16 @@ public:
         int begin;
         int end;
 
+        int pos;
+
     };
 
     std::vector<sequenceMap> sequences;
 
     sf::IntRect currentFrame();
     void tickAnimation();
+    void tickAnimation(int);
+//    void setAnimationSize(int, int);
 
 
 };

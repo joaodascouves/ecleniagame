@@ -9,7 +9,7 @@ Animation::Animation()
 sf::IntRect Animation::currentFrame()
 {
     sf::IntRect frameRect;
-    frameRect.left = frameWidth*frameCount;
+    frameRect.left = frameWidth*sequences.at(currentSequence).pos;
     frameRect.top = 0;
     frameRect.width = frameWidth;
     frameRect.height = frameHeight;
@@ -19,7 +19,12 @@ sf::IntRect Animation::currentFrame()
 
 void Animation::tickAnimation()
 {
-    if( !(GameInstance::get().tick%10) )
-    if( ++frameCount >= sequences.at(currentSequence).end )
-        frameCount = sequences.at(currentSequence).begin;
+    tickAnimation(20);
+}
+
+void Animation::tickAnimation(int tickMod)
+{
+    if( !(GameInstance::get().tick%tickMod) )
+    if( ++sequences.at(currentSequence).pos >= sequences.at(currentSequence).end )
+        sequences.at(currentSequence).pos = sequences.at(currentSequence).begin;
 }

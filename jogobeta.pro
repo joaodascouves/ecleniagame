@@ -11,7 +11,9 @@ SOURCES += \
         gamestate.cpp \
         main.cpp \
         sfaseteste1.cpp \
-        smainmenu.cpp
+        smainmenu.cpp \
+        sworld.cpp \
+        texturemanager.cpp
 
 LIBS += -lsfml-system -lsfml-window -lsfml-graphics
 
@@ -22,4 +24,6 @@ HEADERS += \
     gameinstance.h \
     gamestate.h \
     sfaseteste1.h \
-    smainmenu.h
+    smainmenu.h \
+    sworld.h \
+    texturemanager.h

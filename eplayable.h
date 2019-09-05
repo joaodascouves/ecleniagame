@@ -2,9 +2,8 @@
 #define EPLAYABLE_H
 
 #include "entity.h"
-#include "animation.h"
 
-class EPlayable : public Entity<sf::Sprite>, public Animation
+class EPlayable : public Entity<sf::Sprite>
 {
 public:
     EPlayable();
@@ -12,19 +11,8 @@ public:
 
     virtual void update(const float dt);
     virtual void handleMovement();
-
-    enum
-    {
-        S_STANDING,
-        S_RUNNING,
-        S_WALKING,
-        S_JUMPING,
-        S_FALLING
-    };
-
-    int playerStatus = S_STANDING;
-
-    sf::Texture texRun;
+    virtual void moveLeft();
+    virtual void moveRight();
 };
 
 #endif // EPLAYABLE_H

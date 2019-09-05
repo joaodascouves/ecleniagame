@@ -1,17 +1,16 @@
 #ifndef SFASETESTE1_H
 #define SFASETESTE1_H
 
-#include "gamestate.h"
+#include "sworld.h"
 #include "eplayable.h"
 
 #include <vector>
 
-class SFaseTeste1 : public GameState
+class SFaseTeste1 : public SWorld
 {
 public:
     SFaseTeste1();
 
-    void draw(float dt);
     void update(float dt);
     void handleInput();
 

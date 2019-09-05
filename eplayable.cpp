@@ -1,57 +1,57 @@
 #include "eplayable.h"
 #include "gameinstance.h"
+#include "texturemanager.h"
+
 #include <iostream>
 
 EPlayable::EPlayable()
 {
-    texRun.loadFromFile("/home/void/runanim.bmp");
-    drawableObject->setTexture(texRun);
-    drawableObject->setScale(0.3f, 0.3f);
-    drawableObject->setTextureRect(sf::IntRect(0, 0, 399, 369));
+    TextureManager::get().loadTexture("agoravai.png");
+    TextureManager::get().textureMap.at("agoravai")->setSmooth(false);
 
-    setPosition(20, 500);
+    drawableObject->setOrigin(500.f, 0);
+    drawableObject->setTexture(*TextureManager::get().textureMap.at("agoravai"));
+    drawableObject->setScale(.2f, .2f);
+    drawableObject->setTextureRect(sf::IntRect(0 + 5, 0, 399 - 5, 369));
+    setPosition(20, 425);
 
-    frames = 9;
-    sequences.push_back({0, 0, 8});
-    sequences.push_back({0, 0, 3});
+    sequences.push_back({0, 5, 11, 0});
+    sequences.push_back({0, 0, 4, 0});
 
-    frameWidth = texRun.getSize().x/9;
-    frameHeight = texRun.getSize().y/1;
+    frameWidth = TextureManager::get().textureMap.at("agoravai")->getSize().x/11;
+    frameHeight = TextureManager::get().textureMap.at("agoravai")->getSize().y/1;
 }
 
 void EPlayable::update(const float dt)
 {
-    if( playerStatus == S_STANDING )
-    {
-        currentSequence = 1;
-        tickAnimation();
-    }
-
     drawableObject->setTextureRect(currentFrame());
-    std::cout << GameInstance::get().fps << std::endl;
+
+    setStatus(S_STANDING, true);
+}
+
+void EPlayable::moveLeft()
+{
+    if( direction == D_RIGHT ) flipHorizontally();
+    drawableObject->move(-2, 0);
+
+    setStatus(S_RUNNING, true);
+    tickAnimation();
+}
+
+void EPlayable::moveRight()
+{
+    if( direction == D_LEFT ) flipHorizontally();
+    drawableObject->move(2, 0);
+
+    setStatus(S_RUNNING, true);
+    tickAnimation();
 }
 
 void EPlayable::handleMovement()
 {
-    playerStatus = S_STANDING;
-
     if( sf::Keyboard::isKeyPressed(sf::Keyboard::Left) )
-    {
-        if( direction == D_RIGHT ) flipHorizontally();
-        drawableObject->move(-2, 0);
-
-        playerStatus = S_RUNNING;
-        currentSequence = 0;
-        tickAnimation();
-    }
+        moveLeft();
 
     if( sf::Keyboard::isKeyPressed(sf::Keyboard::Right) )
-    {
-        if( direction == D_LEFT ) flipHorizontally();
-        drawableObject->move(2, 0);
-
-        playerStatus = S_RUNNING;
-        currentSequence = 0;
-        tickAnimation();
-    }
+        moveRight();
 }
