@@ -9,6 +9,8 @@ EDoor::EDoor()
 
 EDoor::EDoor(const short type)
 {
+    setClass("door");
+
     TextureManager::get().loadTexture("door.png");
 
     drawableObject->setTexture(*TextureManager::get().textureMap.at("door"));

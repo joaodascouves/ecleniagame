@@ -2,6 +2,7 @@
 #define EPLAYABLE_H
 
 #include "entity.h"
+#include "inventory.h"
 
 class EPlayable : public Entity<sf::Sprite>
 {
@@ -24,6 +25,9 @@ public:
     virtual void moveRight();
 
     virtual void triggerAction();
+
+    Entity<sf::Sprite>* currentEntity;
+    Inventory* inventory;
 };
 
 #endif // EPLAYABLE_H

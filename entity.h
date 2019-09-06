@@ -14,18 +14,32 @@ public:
 
     enum { D_LEFT = -1, D_RIGHT = 1 };
 
+    short index;
     short direction = D_RIGHT;
     short status = -1;
     short previousStatus = -1;
 
+    std::string e_alias;
+    std::string e_class;
+    std::string description;
+
     virtual void flipHorizontally();
     virtual void update(const float dt){};
+    virtual void destroy();
 
     virtual void moveLeft(){}
     virtual void moveRight(){}
 
     void setStatus(short);
     void setStatus(short, bool);
+
+    void setClass(std::string newClass){ e_class = std::move(newClass); }
+    void setAlias(std::string newAlias){ e_alias = std::move(newAlias); }
+    void setDescription(std::string newDescription){ description = std::move(newDescription); }
+
+    std::string getAlias() const { return e_alias; }
+    std::string getClass() const { return e_class; }
+    std::string getDescription() const { return description; }
 
 protected:
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const

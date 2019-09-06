@@ -4,6 +4,7 @@
 #include "sworld.h"
 #include "eplayable.h"
 #include "edoor.h"
+#include "eitem.h"
 
 #include <vector>
 
@@ -15,6 +16,7 @@ public:
     void handleInput();
 
     EDoor* door1 = new EDoor(0);
+    EDoor* door2 = new EDoor(0);
 };
 
 #endif // SFASETESTE1_H

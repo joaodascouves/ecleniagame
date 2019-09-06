@@ -16,9 +16,12 @@ public:
 
     virtual float getFloor() const;
 
+    void spawn(Entity<sf::Sprite>*);
+
     sf::View worldView;
     sf::View inventoryView;
 
+    sf::Text actionLabel;
     sf::Text actionDescription;
     sf::Font font;
 

@@ -12,7 +12,14 @@ void Entity<T>::flipHorizontally()
 {
     direction *= -1;
     drawableObject->scale(-1, 1);
-//    drawableObject->move(-1*drawableObject->getGlobalBounds().height *direction, 0);
+}
+
+
+template<class T>
+void Entity<T>::destroy()
+{
+    delete drawableObject;
+    drawableObject = nullptr;
 }
 
 template<class T>

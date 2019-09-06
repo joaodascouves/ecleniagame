@@ -19,6 +19,8 @@ EPlayable::EPlayable()
 
     frameWidth = TextureManager::get().textureMap.at("agoravai")->getSize().x/11;
     frameHeight = TextureManager::get().textureMap.at("agoravai")->getSize().y/1;
+
+    inventory = new Inventory;
 }
 
 void EPlayable::update(const float dt)
@@ -53,6 +55,15 @@ void EPlayable::handleMovement()
 
     if( sf::Keyboard::isKeyPressed(sf::Keyboard::Right) )
         moveRight();
+
+    if( sf::Keyboard::isKeyPressed(sf::Keyboard::A) )
+    {
+        if( currentEntity )
+        {
+            if( currentEntity->getClass() == "item" )
+                inventory->acquireItem(static_cast<EItem *>(currentEntity));
+        }
+    }
 }
 
 void EPlayable::triggerAction()

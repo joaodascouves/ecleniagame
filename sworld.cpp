@@ -14,15 +14,22 @@ SWorld::SWorld()
 
     actionDescription.setFont(font);
     actionDescription.setCharacterSize(20);
-    actionDescription.setColor(sf::Color(0, 255, 0));
+    actionDescription.setFillColor(sf::Color(250, 0, 0));
     actionDescription.setString("Teste");
     actionDescription.setPosition(20, 20);
+
+    actionLabel.setFont(font);
+    actionLabel.setCharacterSize(20);
+    actionLabel.setFillColor(sf::Color(0, 250, 0));
+    actionLabel.setString("");
+    actionLabel.setPosition(550, 20);
 }
 
 void SWorld::draw(const float dt)
 {
     GameInstance::get().window.setView(worldView);
     for( auto& e : worldEntities )
+        if( e->drawableObject )
         GameInstance::get().window.draw(*e);
 
     if( mainPlayer )
@@ -33,11 +40,23 @@ void SWorld::draw(const float dt)
         GameInstance::get().window.draw(*e);
 
     GameInstance::get().window.draw(actionDescription);
+    GameInstance::get().window.draw(actionLabel);
+
+    if( mainPlayer )
+    {
+        GameInstance::get().window.draw(mainPlayer->inventory->inventoryShape);
+        for( auto& e : mainPlayer->inventory->items )
+        {
+            GameInstance::get().window.draw(*e);
+        }
+    }
 }
 
 void SWorld::update(const float dt)
 {
+    mainPlayer->currentEntity = nullptr;
     actionDescription.setString("Teste.");
+    actionLabel.setString("");
 
     if( mainPlayer )
     {
@@ -49,18 +68,38 @@ void SWorld::update(const float dt)
 
         for( auto& e : worldEntities )
         {
+            if( !e->drawableObject )
+                continue;
+
             e->update(dt);
 
             if( mainPlayer->drawableObject->getPosition().x + mainPlayer->drawableObject->getGlobalBounds().width  -170 >= e->getPosition().x &&
                 mainPlayer->drawableObject->getPosition().x <= e->getPosition().x + e->drawableObject->getGlobalBounds().width )
             {
-                e->tickAnimation(20, true);
-                actionDescription.setString("Colidiu! PlayerX:" + std::to_string(mainPlayer->drawableObject->getPosition().x)+
-                                            " ObjX:" + std::to_string(e->drawableObject->getGlobalBounds().left));
+                mainPlayer->currentEntity = e;
+
+                if( e->getClass() == "door" )
+                {
+                    e->tickAnimation(20, true);
+                    actionDescription.setString("Colidiu! PlayerX:" + std::to_string(mainPlayer->drawableObject->getPosition().x)+
+                                                " ObjX:" + std::to_string(e->getPosition().x));
+                }
+
+                if( e->getClass() == "item" )
+                {
+                    actionLabel.setString("Pegar (A)");
+                    actionDescription.setString("You see a " + e->getAlias() + ".\n" + e->getDescription());
+                }
             }
         }
     }
 
+}
+
+void SWorld::spawn(Entity<sf::Sprite> *entity)
+{
+    worldEntities.push_back(entity);
+    worldEntities.back()->index = worldEntities.size();
 }
 
 float SWorld::getFloor() const
