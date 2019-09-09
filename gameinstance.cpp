@@ -45,16 +45,17 @@ void GameInstance::gameLoop()
     while( window.isOpen() )
     {
         float currentTime = clock.restart().asSeconds();
+        totalTime += currentTime;
         fps = 1.f/currentTime;
 
         if( peekState() == nullptr )
             continue;
 
         peekState()->handleInput();
-        peekState()->update(fps);
+        peekState()->update(currentTime);
         window.clear();
 
-        peekState()->draw(fps);
+        peekState()->draw(currentTime);
         window.display();
 
         if( ++tick >= 9999999 )

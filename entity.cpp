@@ -4,7 +4,7 @@
 template<class T>
 Entity<T>::Entity()
 {
-    //
+    drawableObject = new T;
 }
 
 template<class T>

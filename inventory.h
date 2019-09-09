@@ -2,17 +2,19 @@
 #define INVENTORY_H
 
 #include "eitem.h"
-#include <vector>
+#include <map>
 
 class Inventory
 {
 public:
     Inventory();
+    Inventory(const Inventory&);
 
     sf::RectangleShape inventoryShape;
-    std::vector<EItem*> items;
+    std::map<std::string, EItem*> items;
 
     void acquireItem(EItem*);
+    bool has(std::string);
 };
 
 #endif // INVENTORY_H

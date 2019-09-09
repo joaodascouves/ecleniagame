@@ -1,28 +1,31 @@
-#ifndef TEXTUREMANAGER_H
-#define TEXTUREMANAGER_H
+#ifndef RESOURCEMANAGER_H
+#define RESOURCEMANAGER_H
 
 #include <SFML/Graphics.hpp>
 #include <map>
 
-class TextureManager
+class ResourceManager
 {
 public:
-    TextureManager();
-    ~TextureManager();
+    ResourceManager();
+    ~ResourceManager();
 
-    static TextureManager& get()
+    static ResourceManager& get()
     {
-        static TextureManager instance;
+        static ResourceManager instance;
         return instance;
     }
 
     void loadTexture(std::string);
+    void loadFont(std::string);
+
     void clearTextures();
 
     sf::Texture getRef(std::string);
 
 //private:
     std::map<std::string, sf::Texture*> textureMap;
+    std::map<std::string, sf::Font*> fontMap;
 };
 
-#endif // TEXTUREMANAGER_H
+#endif // RESOURCEMANAGER_H

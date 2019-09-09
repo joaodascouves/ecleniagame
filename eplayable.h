@@ -21,6 +21,7 @@ public:
 
     virtual void update(const float dt);
     virtual void handleMovement();
+
     virtual void moveLeft();
     virtual void moveRight();
 

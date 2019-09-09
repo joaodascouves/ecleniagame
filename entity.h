@@ -10,7 +10,7 @@ public:
     Entity();
     virtual ~Entity(){}
 
-    T* drawableObject = new T;
+    T* drawableObject;
 
     enum { D_LEFT = -1, D_RIGHT = 1 };
 
@@ -19,9 +19,8 @@ public:
     short status = -1;
     short previousStatus = -1;
 
-    std::string e_alias;
-    std::string e_class;
-    std::string description;
+    sf::Clock clock;
+    sf::Time timer;
 
     virtual void flipHorizontally();
     virtual void update(const float dt){};
@@ -32,6 +31,7 @@ public:
 
     void setStatus(short);
     void setStatus(short, bool);
+    short getStatus() const { return status; }
 
     void setClass(std::string newClass){ e_class = std::move(newClass); }
     void setAlias(std::string newAlias){ e_alias = std::move(newAlias); }
@@ -40,6 +40,11 @@ public:
     std::string getAlias() const { return e_alias; }
     std::string getClass() const { return e_class; }
     std::string getDescription() const { return description; }
+
+private:
+    std::string e_alias;
+    std::string e_class;
+    std::string description;
 
 protected:
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const

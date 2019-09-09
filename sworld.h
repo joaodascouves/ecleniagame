@@ -10,6 +10,7 @@ class SWorld : public GameState
 {
 public:
     SWorld();
+    virtual ~SWorld();
 
     virtual void draw(const float dt);
     virtual void update(const float dt);
@@ -18,13 +19,14 @@ public:
 
     void spawn(Entity<sf::Sprite>*);
 
+    sf::View sceneryView;
     sf::View worldView;
     sf::View inventoryView;
 
     sf::Text actionLabel;
     sf::Text actionDescription;
-    sf::Font font;
 
+    std::vector<Entity<sf::Sprite>*> sceneryEntities;
     std::vector<Entity<sf::Sprite>*> worldEntities;
     std::vector<Entity<sf::RectangleShape>*> worldEntitiesRect;
 

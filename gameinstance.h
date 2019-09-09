@@ -29,6 +29,8 @@ public:
     void gameLoop();
 
     float fps;
+    float totalTime;
+
     unsigned long tick;
 };
 

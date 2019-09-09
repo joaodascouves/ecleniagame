@@ -1,24 +1,31 @@
-#include "texturemanager.h"
+#include "resourcemanager.h"
 #include <iostream>
 
-TextureManager::TextureManager()
+ResourceManager::ResourceManager()
 {
     //
 }
 
-TextureManager::~TextureManager()
+ResourceManager::~ResourceManager()
 {
     //
 }
 
-void TextureManager::loadTexture(std::string fname)
+void ResourceManager::loadTexture(std::string fname)
 {
     std::string alias = fname.substr(0, fname.find('.'));
     textureMap.insert(std::make_pair(alias, new sf::Texture));
-    textureMap[alias]->loadFromFile("sprites/" + fname);
+    textureMap[alias]->loadFromFile("resources/sprites/" + fname);
 }
 
-sf::Texture TextureManager::getRef(std::string alias)
+void ResourceManager::loadFont(std::string fname)
+{
+    std::string alias = fname.substr(0, fname.find('.'));
+    fontMap.insert(std::make_pair(alias, new sf::Font));
+    fontMap[alias]->loadFromFile("resources/fonts/" + fname);
+}
+
+sf::Texture ResourceManager::getRef(std::string alias)
 {
     return *textureMap.at(alias);
 }
