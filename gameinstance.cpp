@@ -52,10 +52,10 @@ void GameInstance::gameLoop()
             continue;
 
         peekState()->handleInput();
-        peekState()->update(currentTime);
+        peekState()->update();
         window.clear();
 
-        peekState()->draw(currentTime);
+        peekState()->draw();
         window.display();
 
         if( ++tick >= 9999999 )

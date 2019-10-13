@@ -9,7 +9,28 @@ public:
     ENonPlayable();
     virtual ~ENonPlayable(){}
 
-    virtual void update(const float){}
+    enum
+    {
+        S_STANDING,
+        S_RUNNING,
+        S_HITTING,
+        S_SLAPPED,
+        S_DYING
+    };
+
+    virtual void update();
+    virtual void _update(){}
+};
+
+class ENonPlayableHitable : public ENonPlayable
+{
+public:
+    ENonPlayableHitable();
+    virtual ~ENonPlayableHitable(){}
+
+    virtual void slap(signed short);
+
+    unsigned short life = 3;
 };
 
 class AntiJoaozin : public ENonPlayable
@@ -17,8 +38,15 @@ class AntiJoaozin : public ENonPlayable
 public:
     AntiJoaozin();
     virtual ~AntiJoaozin(){}
+};
 
-    virtual void update(const float);
+class ES1Ghost : public ENonPlayableHitable
+{
+public:
+    ES1Ghost();
+    virtual ~ES1Ghost(){}
+
+    virtual void _update();
 };
 
 #endif // ENONPLAYABLE_H

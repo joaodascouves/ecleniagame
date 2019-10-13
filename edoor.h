@@ -28,7 +28,7 @@ public:
     void setType(const short);
     int getType(short) const;
 
-    virtual void update(const float);
+    virtual void update() override;
     virtual void enterDoor(EPlayable*, SWorld*);
 };
 

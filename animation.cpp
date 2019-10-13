@@ -3,39 +3,65 @@
 
 Animation::Animation()
 {
-
+    //
 }
 
 sf::IntRect Animation::currentFrame()
 {
     sf::IntRect frameRect;
     frameRect.left = frameWidth*sequences.at(currentSequence).pos;
-    frameRect.top = 0;
+    frameRect.top = frameHeight*sequences.at(currentSequence).row;
     frameRect.width = frameWidth;
     frameRect.height = frameHeight;
 
     return frameRect;
 }
 
-void Animation::tickAnimation()
+void Animation::addSequence(int status, sequenceMap newSequence)
 {
-    tickAnimation(20);
+    sequences.insert(std::pair<int, sequenceMap>(status, std::move(newSequence)));
 }
 
-void Animation::tickAnimation(int tickMod)
+sequenceMap Animation::getSequence()
 {
-    tickAnimation(20, false);
+    return sequences.at(currentSequence);
 }
 
-void Animation::tickAnimation(int tickMod, bool runOnce)
+sequenceMap Animation::getSequence(int status)
+{
+    return sequences.at(status);
+}
+
+bool Animation::tickAnimation()
+{
+    return tickAnimation(20);
+}
+
+bool Animation::tickAnimation(int tickMod)
+{
+    return tickAnimation(tickMod, false);
+}
+
+bool Animation::tickAnimation(int tickMod, bool runOnce)
 {
     if( runOnce && sequences.at(currentSequence).pos >= sequences.at(currentSequence).end )
-        return;
+        return true;
 
-    if( !(GameInstance::get().tick%tickMod) )
+    if( !(GameInstance::get().tick % tickMod) || tickMod == -1 )
     if( ++sequences.at(currentSequence).pos >= sequences.at(currentSequence).end )
     {
-        if( !runOnce ) sequences.at(currentSequence).pos = sequences.at(currentSequence).begin;
-        else sequences.at(currentSequence).pos = sequences.at(currentSequence).end - 1;
+        if( !runOnce )
+        {
+            sequences.at(currentSequence).pos = sequences.at(currentSequence).begin;
+            sequences.at(currentSequence).cycle++;
+        }
+        else
+        {
+            sequences.at(currentSequence).pos = sequences.at(currentSequence).end - 1;
+        }
+
+        return true;
     }
+
+    return false;
 }

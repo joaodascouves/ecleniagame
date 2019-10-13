@@ -6,12 +6,12 @@ SMainMenu::SMainMenu()
     //
 }
 
-void SMainMenu::draw(float dt)
+void SMainMenu::draw()
 {
     //
 }
 
-void SMainMenu::update(float dt)
+void SMainMenu::update()
 {
     //
 }

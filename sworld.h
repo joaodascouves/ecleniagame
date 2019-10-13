@@ -12,8 +12,19 @@ public:
     SWorld();
     virtual ~SWorld();
 
-    virtual void draw(const float dt);
-    virtual void update(const float dt);
+    enum
+    {
+        K_LEFT,
+        K_RIGHT,
+        K_HIT,
+        K_ACTION
+    };
+
+    short keyPress[4] = {0, 0, 0, 0};
+
+    virtual void draw();
+    virtual void update();
+    virtual void handleInput();
 
     virtual float getFloor() const;
 

@@ -23,7 +23,7 @@ public:
     sf::Time timer;
 
     virtual void flipHorizontally();
-    virtual void update(const float dt){};
+    virtual void update(){};
     virtual void destroy();
 
     virtual void moveLeft(){}
@@ -36,6 +36,8 @@ public:
     void setClass(std::string newClass){ e_class = std::move(newClass); }
     void setAlias(std::string newAlias){ e_alias = std::move(newAlias); }
     void setDescription(std::string newDescription){ description = std::move(newDescription); }
+
+    void configAnimation(int, int);
 
     std::string getAlias() const { return e_alias; }
     std::string getClass() const { return e_class; }

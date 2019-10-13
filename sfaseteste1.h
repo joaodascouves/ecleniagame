@@ -13,8 +13,6 @@ class SFaseTeste1 : public SWorld
 public:
     SFaseTeste1();
 
-    void handleInput();
-
     EDoor* door1;
     EDoor* door2;
 
@@ -22,6 +20,7 @@ public:
     EItem* grape2;
 
     AntiJoaozin* antiJoaozin;
+    ES1Ghost* ghostTeste, *ghostTeste1, *ghostTeste2, *ghostTeste3;
 };
 
 #endif // SFASETESTE1_H

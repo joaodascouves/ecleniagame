@@ -5,6 +5,7 @@ template<class T>
 Entity<T>::Entity()
 {
     drawableObject = new T;
+    status = 0;
 }
 
 template<class T>
@@ -13,7 +14,6 @@ void Entity<T>::flipHorizontally()
     direction *= -1;
     drawableObject->scale(-1, 1);
 }
-
 
 template<class T>
 void Entity<T>::destroy()
@@ -25,7 +25,7 @@ void Entity<T>::destroy()
 template<class T>
 void Entity<T>::setStatus(const short newStatus)
 {
-    setStatus(newStatus, 0);
+    setStatus(newStatus, false);
 }
 
 template<class T>
@@ -42,6 +42,13 @@ void Entity<T>::setStatus(const short newStatus, bool refresh)
             sequences.at(currentSequence).pos > sequences.at(currentSequence).end )
             sequences.at(currentSequence).pos = sequences.at(currentSequence).begin;
 
-        tickAnimation(10);
+        tickAnimation(-1, true);
     }
+}
+
+template<>
+void Entity<sf::Sprite>::configAnimation(int x, int y)
+{
+    frameWidth = drawableObject->getTexture()->getSize().x/x;
+    frameHeight = drawableObject->getTexture()->getSize().y/y;
 }

@@ -17,11 +17,9 @@ EDoor::EDoor(const short type)
     drawableObject->setTexture(*ResourceManager::get().textureMap.at("door"));
     drawableObject->setScale(.2f, .28f);
 
-    sequences.push_back({0, 0, 0, 0});
-    sequences.push_back({0, 0, 5, 0});
-
-    frameWidth = drawableObject->getTexture()->getSize().x/5;
-    frameHeight = drawableObject->getTexture()->getSize().y/1;
+    configAnimation(5, 1);
+    addSequence(S_LOCKED, {0, 0, 0, 0, 0});
+    addSequence(S_OPENED, {0, 0, 5, 0, 0});
 
     location = nullptr;
     conditionFunc = std::bind([](){ return true; });
@@ -33,7 +31,7 @@ EDoor::~EDoor()
 //        delete location;
 }
 
-void EDoor::update(const float dt)
+void EDoor::update()
 {
     tickAnimation(20, true);
     drawableObject->setTextureRect(currentFrame());

@@ -9,84 +9,61 @@
 
 EPlayable::EPlayable()
 {
-    ResourceManager::get().loadTexture("agoravai.png");
-    ResourceManager::get().textureMap.at("agoravai")->setSmooth(false);
+    setClass("mainPlayer");
 
-    drawableObject->setOrigin(500.f, 0);
-    drawableObject->setTexture(*ResourceManager::get().textureMap.at("agoravai"));
-    drawableObject->setScale(.23f, .23f);
+    ResourceManager::get().loadTexture("sheet1.png");
+    ResourceManager::get().textureMap.at("sheet1")->setSmooth(true);
+
+    drawableObject->setOrigin(120, 0);
+    drawableObject->setTexture(*ResourceManager::get().textureMap.at("sheet1"));
     drawableObject->setTextureRect(sf::IntRect(0 + 5, 0, 399 - 5, 369));
 
-    sequences.push_back({0, 5, 11, 0});
-    sequences.push_back({0, 0, 4, 0});
-
-    frameWidth = ResourceManager::get().textureMap.at("agoravai")->getSize().x/11;
-    frameHeight = ResourceManager::get().textureMap.at("agoravai")->getSize().y/1;
+    configAnimation(11, 2);
+    addSequence(S_STANDING, {0, 0, 4, 0, 0});
+    addSequence(S_RUNNING, {0, 5, 11, 0, 0});
+    addSequence(S_HITTING, {1, 1, 4, 0, 0});
 
     inventory = new Inventory;
 }
 
-void EPlayable::update(const float dt)
+void EPlayable::_update()
 {
-    drawableObject->setTextureRect(currentFrame());
-    setStatus(S_STANDING, true);
+    if( sequences.at(currentSequence).cycle )
+        if( getStatus() == S_HITTING )
+        {
+            for( auto &e : hitableEntities )
+                static_cast<ENonPlayableHitable*>(e)->slap(direction);
+        }
 }
 
 void EPlayable::moveLeft()
 {
     if( direction == D_RIGHT ) flipHorizontally();
-    drawableObject->move(-20, 0);
+    drawableObject->move(-3.5, 0);
 
-    setStatus(S_RUNNING, true);
-    tickAnimation();
+    if ( getStatus() != S_RUNNING )
+        setStatus(S_RUNNING, true);
+
+    clock.restart();
 }
 
 void EPlayable::moveRight()
 {
     if( direction == D_LEFT ) flipHorizontally();
-    drawableObject->move(20, 0);
+    drawableObject->move(3.5, 0);
 
-    setStatus(S_RUNNING, true);
-    tickAnimation();
+    if ( getStatus() != S_RUNNING )
+        setStatus(S_RUNNING, true);
+
+    clock.restart();
 }
 
-void EPlayable::handleMovement()
+void EPlayable::hit()
 {
-    if( sf::Keyboard::isKeyPressed(sf::Keyboard::Left) )
-        moveLeft();
+    if( getStatus() != S_HITTING )
+        setStatus(S_HITTING, true);
 
-    if( sf::Keyboard::isKeyPressed(sf::Keyboard::Right) )
-        moveRight();
-
-    if( sf::Keyboard::isKeyPressed(sf::Keyboard::A) )
-    {
-        if( currentEntity )
-        {
-            if( currentEntity->getClass() == "item" )
-                inventory->acquireItem(static_cast<EItem *>(currentEntity));
-
-            if( currentEntity->getClass() == "door" )
-            {
-                if( !static_cast<EDoor*>(currentEntity)->location )
-                if( static_cast<EDoor*>(currentEntity)->conditionFunc() )
-                {
-                    SFaseTeste1* newLocation = new SFaseTeste1;
-
-                    if( currentEntity->getAlias() == "door1" )
-                    {
-                        if( newLocation->door2 )
-                            newLocation->mainPlayer->drawableObject->setPosition(
-                                        newLocation->door2->getPosition().x, 0);
-                    }
-
-                    static_cast<EDoor*>(currentEntity)->enterDoor(this, newLocation);
-                }
-            }
-
-            if( currentEntity->getClass() == "nonplayable" )
-                currentEntity->destroy();
-        }
-    }
+    clock.restart();
 }
 
 void EPlayable::triggerAction()

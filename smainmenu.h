@@ -8,8 +8,8 @@ class SMainMenu : public GameState
 public:
     SMainMenu();
 
-    void draw(float dt);
-    void update(float dt);
+    void draw();
+    void update();
     void handleInput();
 };
 

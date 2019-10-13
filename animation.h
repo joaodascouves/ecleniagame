@@ -2,18 +2,18 @@
 #define ANIMATION_H
 
 #include <SFML/Graphics.hpp>
-#include <vector>
+#include <map>
 
 class Animation
 {
 public:
     Animation();
 
-    int frames;
-    int frameWidth;
-    int frameHeight;
+    size_t frames;
+    unsigned int frameWidth;
+    unsigned int frameHeight;
 
-    int currentSequence = 0;
+    std::size_t currentSequence = 0;
 
     struct sequenceMap
     {
@@ -22,19 +22,28 @@ public:
         int end;
 
         int pos;
+        int cycle;
 
     };
 
-    std::vector<sequenceMap> sequences;
+    std::map<int, sequenceMap> sequences;
 
     sf::IntRect currentFrame();
-    void tickAnimation();
-    void tickAnimation(int);
-    void tickAnimation(int, bool);
+
+    void addSequence(int, sequenceMap);
+    sequenceMap getSequence();
+    sequenceMap getSequence(int);
+
+    bool tickAnimation();
+    bool tickAnimation(int);
+    bool tickAnimation(int, bool);
 
 //    void setAnimationSize(int, int);
 
 
 };
+
+// Declaração global da struct declarada dentro da classe
+typedef Animation::sequenceMap sequenceMap;
 
 #endif // ANIMATION_H
