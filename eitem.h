@@ -9,7 +9,7 @@ public:
     EItem();
     EItem(const EItem&);
 
-    //
+    virtual void action(Entity*);
 };
 
 #endif // EITEM_H

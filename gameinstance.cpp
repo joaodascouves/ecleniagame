@@ -52,6 +52,9 @@ void GameInstance::gameLoop()
             continue;
 
         peekState()->handleInput();
+        if( !window.isOpen() )
+            break;
+
         peekState()->update();
         window.clear();
 

@@ -9,26 +9,29 @@
 
 EPlayable::EPlayable()
 {
-    setClass("mainPlayer");
+    addClass("emainplayer");
 
     ResourceManager::get().loadTexture("sheet1.png");
     ResourceManager::get().textureMap.at("sheet1")->setSmooth(true);
 
-    drawableObject->setOrigin(120, 0);
-    drawableObject->setTexture(*ResourceManager::get().textureMap.at("sheet1"));
-    drawableObject->setTextureRect(sf::IntRect(0 + 5, 0, 399 - 5, 369));
+    front()->setOrigin(120, 0);
+    front()->setTexture(*ResourceManager::get().textureMap.at("sheet1"));
+    front()->setTextureRect(sf::IntRect(0 + 5, 0, 399 - 5, 369));
 
     configAnimation(11, 2);
     addSequence(S_STANDING, {0, 0, 4, 0, 0});
     addSequence(S_RUNNING, {0, 5, 11, 0, 0});
     addSequence(S_HITTING, {1, 1, 4, 0, 0});
+    addSequence(S_SLAPPED, {0, 6, 6, 0, 0});
 
     inventory = new Inventory;
+    life = 1000;
+    horizontalSpeed = 3.5f;
 }
 
 void EPlayable::_update()
 {
-    if( sequences.at(currentSequence).cycle )
+    if( getSequence().pos == 1 )
         if( getStatus() == S_HITTING )
         {
             for( auto &e : hitableEntities )
@@ -36,37 +39,15 @@ void EPlayable::_update()
         }
 }
 
-void EPlayable::moveLeft()
-{
-    if( direction == D_RIGHT ) flipHorizontally();
-    drawableObject->move(-3.5, 0);
-
-    if ( getStatus() != S_RUNNING )
-        setStatus(S_RUNNING, true);
-
-    clock.restart();
-}
-
-void EPlayable::moveRight()
-{
-    if( direction == D_LEFT ) flipHorizontally();
-    drawableObject->move(3.5, 0);
-
-    if ( getStatus() != S_RUNNING )
-        setStatus(S_RUNNING, true);
-
-    clock.restart();
-}
-
 void EPlayable::hit()
 {
-    if( getStatus() != S_HITTING )
-        setStatus(S_HITTING, true);
+    timer = hitClock.getElapsedTime();
+    if( timer.asSeconds() >  .2f )
+    {
+        if( getStatus() != S_HITTING )
+            setStatus(S_HITTING, true);
 
-    clock.restart();
-}
-
-void EPlayable::triggerAction()
-{
-    //
+        hitClock.restart();
+        clock.restart();
+    }
 }

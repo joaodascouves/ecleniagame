@@ -1,21 +1,19 @@
 #include "edoor.h"
+#include "eplayable.h"
 #include "resourcemanager.h"
 
-EDoor::EDoor()
-{
-    EDoor(0);
+#include "sfaseteste1.h"
 
-}
-
-EDoor::EDoor(const short type)
+template<class T>
+EDoor<T>::EDoor()
 {
-    setClass("door");
+    addClass("edoor");
     setStatus(S_LOCKED);
 
     ResourceManager::get().loadTexture("door.png");
 
-    drawableObject->setTexture(*ResourceManager::get().textureMap.at("door"));
-    drawableObject->setScale(.2f, .28f);
+    front()->setTexture(*ResourceManager::get().textureMap.at("door"));
+    front()->setScale(.2f, .28f);
 
     configAnimation(5, 1);
     addSequence(S_LOCKED, {0, 0, 0, 0, 0});
@@ -25,16 +23,18 @@ EDoor::EDoor(const short type)
     conditionFunc = std::bind([](){ return true; });
 }
 
-EDoor::~EDoor()
+template<class T>
+EDoor<T>::~EDoor()
 {
 //    if( location )
 //        delete location;
 }
 
-void EDoor::update()
+template<class T>
+void EDoor<T>::update()
 {
     tickAnimation(20, true);
-    drawableObject->setTextureRect(currentFrame());
+    front()->setTextureRect(currentFrame());
 
     timer = clock.getElapsedTime();
 
@@ -44,14 +44,19 @@ void EDoor::update()
 
 }
 
-void EDoor::enterDoor(EPlayable* player, SWorld* newLocation)
+template<class T>
+void EDoor<T>::action(Entity* mainPlayer)
 {
     if( conditionFunc() )
     {
         setStatus(S_OPENED);
-        location = newLocation;
-        location->mainPlayer->inventory = new Inventory(*player->inventory);
+        if( !location )
+            location = new T;
+
+        location->mainPlayer->inventory = new Inventory(*static_cast<EPlayable*>(mainPlayer)->inventory);
 
         timer = clock.restart();
     }
 }
+
+template class EDoor<SFaseTeste1>;

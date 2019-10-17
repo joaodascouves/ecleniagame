@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.10.0, 2019-10-12T23:58:20. -->
+<!-- Written by QtCreator 4.10.1, 2019-10-16T16:28:40. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -314,7 +314,7 @@
     <value type="bool" key="RunConfiguration.UseMultiProcess">false</value>
     <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
-    <value type="bool" key="RunConfiguration.UseTerminal">true</value>
+    <value type="bool" key="RunConfiguration.UseTerminal">false</value>
     <value type="QString" key="RunConfiguration.WorkingDirectory"></value>
     <value type="QString" key="RunConfiguration.WorkingDirectory.default">/home/void/projetos/build-jogobeta-Desktop_Qt_5_12_2_GCC_64bit-Debug</value>
    </valuemap>

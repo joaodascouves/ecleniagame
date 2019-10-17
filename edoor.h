@@ -2,17 +2,15 @@
 #define EDOOR_H
 
 #include "gameinstance.h"
-#include "sworld.h"
 #include "entity.h"
-#include "eplayable.h"
 
 #include <functional>
 
+template<class T>
 class EDoor : public Entity<sf::Sprite>
 {
 public:
     EDoor();
-    EDoor(const short);
     virtual ~EDoor();
 
     enum
@@ -21,7 +19,7 @@ public:
         S_OPENED
     };
 
-    SWorld* location;
+    T* location;
 
     std::function<bool()> conditionFunc;
 
@@ -29,7 +27,7 @@ public:
     int getType(short) const;
 
     virtual void update() override;
-    virtual void enterDoor(EPlayable*, SWorld*);
+    virtual void action(Entity*);
 };
 
 #endif // EDOOR_H

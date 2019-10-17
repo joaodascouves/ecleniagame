@@ -3,6 +3,7 @@
 
 #include "gamestate.h"
 #include "eplayable.h"
+#include "edialogbox.h"
 
 #include <vector>
 
@@ -12,27 +13,34 @@ public:
     SWorld();
     virtual ~SWorld();
 
-    enum
-    {
-        K_LEFT,
-        K_RIGHT,
-        K_HIT,
-        K_ACTION
-    };
-
-    short keyPress[4] = {0, 0, 0, 0};
-
     virtual void draw();
     virtual void update();
+    virtual void _update(){}
     virtual void handleInput();
 
     virtual float getFloor() const;
 
     void spawn(Entity<sf::Sprite>*);
+    void spawn(Entity<sf::RectangleShape>*);
+
+    void showDialogBox(EDialogBox*);
+
+    enum
+    {
+        K_LEFT,
+        K_RIGHT,
+        K_HIT,
+        K_ACTION,
+        K_ESCAPE
+    };
+
+    short keyPress[5] = {0, 0, 0, 0, 0};
 
     sf::View sceneryView;
     sf::View worldView;
-    sf::View inventoryView;
+    sf::View interfaceView;
+
+    float screenSpeed = 50.0f;
 
     sf::Text actionLabel;
     sf::Text actionDescription;
@@ -42,6 +50,9 @@ public:
     std::vector<Entity<sf::RectangleShape>*> worldEntitiesRect;
 
     EPlayable* mainPlayer;
+    EDialogBox* dialogBox = nullptr;
+
+    std::vector<Entity<sf::RectangleShape>*>::iterator dialogBoxIterator;
 };
 
 #endif // SWORLD_H

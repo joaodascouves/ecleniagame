@@ -4,22 +4,34 @@
 template<class T>
 Entity<T>::Entity()
 {
-    drawableObject = new T;
+    drawableObjects.push_back(new T);
     status = 0;
+}
+
+template<class T>
+Entity<T>::~Entity()
+{
+    destroy();
+    direction = 0;
 }
 
 template<class T>
 void Entity<T>::flipHorizontally()
 {
     direction *= -1;
-    drawableObject->scale(-1, 1);
 }
 
 template<class T>
 void Entity<T>::destroy()
 {
-    delete drawableObject;
-    drawableObject = nullptr;
+    for( auto &obj : drawableObjects )
+    {
+        delete obj;
+        obj = nullptr;
+    }
+
+    drawableObjects.clear();
+    drawableTextObjects.clear();
 }
 
 template<class T>
@@ -49,6 +61,10 @@ void Entity<T>::setStatus(const short newStatus, bool refresh)
 template<>
 void Entity<sf::Sprite>::configAnimation(int x, int y)
 {
-    frameWidth = drawableObject->getTexture()->getSize().x/x;
-    frameHeight = drawableObject->getTexture()->getSize().y/y;
+    frameWidth = front()->getTexture()->getSize().x/x;
+    frameHeight = front()->getTexture()->getSize().y/y;
 }
+
+template class Entity<sf::Sprite>;
+template class Entity<sf::RectangleShape>;
+template class Entity<sf::Text>;

@@ -1,7 +1,7 @@
 #ifndef EPLAYABLE_H
 #define EPLAYABLE_H
 
-#include "enonplayable.h"
+#include "enonplayablehitable.h"
 #include "inventory.h"
 
 class EPlayable : public ENonPlayableHitable
@@ -13,14 +13,11 @@ public:
     sf::Clock hitClock;
 
     virtual void _update();
-
-    virtual void moveLeft();
-    virtual void moveRight();
     virtual void hit();
 
-    virtual void triggerAction();
-
     Entity<sf::Sprite>* currentEntity;
+    sf::Text* currentTextEntity;
+
     std::vector<Entity<sf::Sprite>*> hitableEntities;
 
     Inventory* inventory;

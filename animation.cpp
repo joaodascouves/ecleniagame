@@ -10,8 +10,11 @@ sf::IntRect Animation::currentFrame()
 {
     sf::IntRect frameRect;
     frameRect.left = frameWidth*sequences.at(currentSequence).pos;
+    if( direction == -1 )
+        frameRect.left += frameWidth;
+
     frameRect.top = frameHeight*sequences.at(currentSequence).row;
-    frameRect.width = frameWidth;
+    frameRect.width = frameWidth * direction;
     frameRect.height = frameHeight;
 
     return frameRect;
@@ -20,6 +23,11 @@ sf::IntRect Animation::currentFrame()
 void Animation::addSequence(int status, sequenceMap newSequence)
 {
     sequences.insert(std::pair<int, sequenceMap>(status, std::move(newSequence)));
+}
+
+bool Animation::hasSequence(int status)
+{
+    return sequences.find(status) != sequences.end();
 }
 
 sequenceMap Animation::getSequence()
@@ -44,8 +52,13 @@ bool Animation::tickAnimation(int tickMod)
 
 bool Animation::tickAnimation(int tickMod, bool runOnce)
 {
+    sequenceEnd = false;
+
     if( runOnce && sequences.at(currentSequence).pos >= sequences.at(currentSequence).end )
-        return true;
+    {
+        sequenceEnd = true;
+        return sequenceEnd;
+    }
 
     if( !(GameInstance::get().tick % tickMod) || tickMod == -1 )
     if( ++sequences.at(currentSequence).pos >= sequences.at(currentSequence).end )
@@ -60,8 +73,8 @@ bool Animation::tickAnimation(int tickMod, bool runOnce)
             sequences.at(currentSequence).pos = sequences.at(currentSequence).end - 1;
         }
 
-        return true;
+        sequenceEnd = true;
     }
 
-    return false;
+    return sequenceEnd;
 }
