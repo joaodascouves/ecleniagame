@@ -5,18 +5,16 @@
 EDialogBox::EDialogBox()
 {
     addClass("edialogbox");
-    ResourceManager::get().loadFont("arial.ttf");
 
     drawableObjects.push_back(new sf::RectangleShape);
     front()->setSize(sf::Vector2f(GameInstance::get().window.getSize().x, 300));
     front()->setFillColor(sf::Color(180, 60, 30, 180));
 
-    nextIcon.setFont(*ResourceManager::get().fontMap.at("arial"));
+    nextIcon.setFont(ResourceManager::get().getRef<sf::Font>("arial"));
     nextIcon.setCharacterSize(25);
     nextIcon.setStyle(sf::Text::Bold);
     nextIcon.setPosition(950, front()->getSize().y - 50);
     nextIcon.setString(">>");
-
 
     drawableTextObjects.push_back(&nextIcon);
 }

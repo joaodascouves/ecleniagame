@@ -15,48 +15,49 @@ public:
     std::vector<sf::Text*> drawableTextObjects;
 
     short index;
-    short status = -1;
-    short previousStatus = 0;
-    bool spawned = false;
+    short status;
+    short previousStatus;
+    bool spawned;
 
     sf::Clock clock;
     sf::Time timer;
 
-    T* front() const { return drawableObjects.front(); }
+    T* front() const;
 
     virtual void flipHorizontally();
     virtual void update(){}
     virtual void destroy();
     virtual void action(Entity*){}
 
-    virtual void moveLeft(){}
-    virtual void moveRight(){}
-
     void hide(){ if( status!= -1 ){ previousStatus = status; status = -1; } }
     void show(){ status = previousStatus; }
+    bool isSpawned() const { return spawned; }
+
+    void setTextureName(std::string);
 
     void setStatus(short);
     void setStatus(short, bool);
     short getStatus() const { return status; }
-    bool isSpawned() const { return spawned; }
 
-    void addClass(std::string newClass){ e_class.push_back(std::move(newClass)); }
-    void setAlias(std::string newAlias){ e_alias = std::move(newAlias); }
+    void addClass(std::string newClass){ classes.push_back(std::move(newClass)); }
+    void setAlias(std::string);
     void setDescription(std::string newDescription){ description = std::move(newDescription); }
 
     void configAnimation(int, int);
 
-    std::string getAlias() const { return e_alias; }
+    std::string getAlias() const { return alias; }
     std::string getDescription() const { return description; }
     bool hasClass(std::string searchClass) const
     {
-        return std::find(e_class.begin(), e_class.end(), searchClass) != e_class.end();
+        return std::find(classes.begin(), classes.end(), searchClass) != classes.end();
     }
 
 private:
-    std::string e_alias;
+    std::string alias;
     std::string description;
-    std::vector<std::string> e_class;
+    std::string textureName;
+
+    std::vector<std::string> classes;
 
 protected:
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const

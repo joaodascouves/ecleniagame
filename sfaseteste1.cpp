@@ -3,15 +3,11 @@
 
 SFaseTeste1::SFaseTeste1()
 {
-    ResourceManager::get().loadTexture("montanha2.jpg");
-    ResourceManager::get().loadTexture("grape.png");
-    ResourceManager::get().loadTexture("cenario1.png");
+    sceneryEntities.push_back(new Entity<sf::Sprite>);
+    sceneryEntities.back()->setTextureName("es1scenery1");
 
     sceneryEntities.push_back(new Entity<sf::Sprite>);
-    sceneryEntities.back()->front()->setTexture(*ResourceManager::get().textureMap.at("cenario1"));
-
-    sceneryEntities.push_back(new Entity<sf::Sprite>);
-    sceneryEntities.back()->front()->setTexture(*ResourceManager::get().textureMap.at("cenario1"));
+    sceneryEntities.back()->setTextureName("es1scenery1");
     sceneryEntities.back()->setPosition(sceneryEntities.at(0)->front()->getGlobalBounds().width, 0);
 
     grape1 = new EItem();
@@ -72,13 +68,13 @@ SFaseTeste1::SFaseTeste1()
 //    spawn(grape1);
 //    worldEntities.back()->setAlias("grape");
 //    worldEntities.back()->setDescription("Por qual motivo alguem deixaria um cacho de uvas aqui?");
-//    worldEntities.back()->front()->setTexture(*ResourceManager::get().textureMap.at("grape"));
+//    worldEntities.back()->front()->setTexture(ResourceManager::get().getRef<sf::Texture>("grape"));
 //    worldEntities.back()->setPosition(300, 450 - getFloor());
 
 //    spawn(grape2);
 //    worldEntities.back()->setAlias("grape");
 //    worldEntities.back()->setDescription("Por qual motivo alguem deixaria um cacho de uvas aqui?");
-//    worldEntities.back()->front()->setTexture(*ResourceManager::get().textureMap.at("grape"));
+//    worldEntities.back()->front()->setTexture(ResourceManager::get().getRef<sf::Texture>("grape"));
 //    worldEntities.back()->setPosition(100, 450 - getFloor());
 
     spawn(door1);

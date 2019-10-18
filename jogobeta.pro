@@ -3,7 +3,7 @@ CONFIG += console c++11
 CONFIG -= app_bundle
 CONFIG -= qt
 
-QMAKE_CXXFLAGS += -Wunused-parameter
+QMAKE_CXXFLAGS += -Wunused-parameter -std=gnu++17
 
 SOURCES += \
         animation.cpp \
@@ -27,7 +27,7 @@ SOURCES += \
         spawnmanager.cpp \
         sworld.cpp
 
-LIBS += -lsfml-system -lsfml-window -lsfml-graphics
+LIBS += -lsfml-system -lsfml-window -lsfml-graphics -lsfml-audio
 
 HEADERS += \
     animation.h \

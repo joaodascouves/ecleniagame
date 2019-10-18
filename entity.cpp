@@ -1,11 +1,17 @@
 #include "entity.h"
 #include "gameinstance.h"
+#include "resourcemanager.h"
+
+#include <iostream>
 
 template<class T>
 Entity<T>::Entity()
 {
     drawableObjects.push_back(new T);
+
     status = 0;
+    previousStatus = 0;
+    spawned = false;
 }
 
 template<class T>
@@ -13,6 +19,12 @@ Entity<T>::~Entity()
 {
     destroy();
     direction = 0;
+}
+
+template<class T>
+T* Entity<T>::front() const
+{
+    return drawableObjects.front();
 }
 
 template<class T>
@@ -32,6 +44,15 @@ void Entity<T>::destroy()
 
     drawableObjects.clear();
     drawableTextObjects.clear();
+}
+
+template<>
+void Entity<sf::Sprite>::setTextureName(std::string alias)
+{
+    textureName = std::move(alias);
+    std::cout << textureName << std::endl;
+
+    front()->setTexture(ResourceManager::get().getRef<sf::Texture>(textureName));
 }
 
 template<class T>
@@ -56,6 +77,12 @@ void Entity<T>::setStatus(const short newStatus, bool refresh)
 
         tickAnimation(-1, true);
     }
+}
+
+template<class T>
+void Entity<T>::setAlias(std::string newAlias)
+{
+    alias = std::move(newAlias);
 }
 
 template<>

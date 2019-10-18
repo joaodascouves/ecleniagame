@@ -10,9 +10,7 @@ EDoor<T>::EDoor()
     addClass("edoor");
     setStatus(S_LOCKED);
 
-    ResourceManager::get().loadTexture("door.png");
-
-    front()->setTexture(*ResourceManager::get().textureMap.at("door"));
+    setTextureName("edoor");
     front()->setScale(.2f, .28f);
 
     configAnimation(5, 1);

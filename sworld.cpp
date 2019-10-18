@@ -36,6 +36,8 @@ SWorld::SWorld()
 
 SWorld::~SWorld()
 {
+    ResourceManager::get().clear();
+
     for( auto& obj : worldEntities )
     {
         obj->destroy();
@@ -74,9 +76,6 @@ void SWorld::draw()
 
 void SWorld::update()
 {
-    mainPlayer->currentEntity = nullptr;
-    mainPlayer->currentTextEntity = nullptr;
-    mainPlayer->hitableEntities.clear();
 //    actionDescription.setString("Teste.");
 //    actionLabel.setString("");
 
@@ -84,91 +83,99 @@ void SWorld::update()
 
     if( mainPlayer )
     {
+        mainPlayer->currentEntity = nullptr;
+        mainPlayer->currentTextEntity = nullptr;
+        mainPlayer->hitableEntities.clear();
+
         for( auto it = worldEntities.begin(); it != worldEntities.end(); it++ )
         {
-            auto *e = *it;
-
-            if( !e->drawableObjects.empty() )
+            if( auto *e = *it)
             {
-                if( !(e->hasClass("enonplayablehitable") && dialogBox) )
-                    e->update();
-            }
-
-            if( e->getPosition().x < 0 )
-                e->destroy();
-
-            if( !e->direction || e->drawableObjects.empty() )
-            {
-                worldEntities.erase(it--);
-                continue;
-            }
-
-            if( e->hasClass("enonplayablehitable") )
-            {
-                bool hitable = false;
-
-                if( mainPlayer->direction == mainPlayer->D_RIGHT )
+                if( !e->drawableObjects.empty() )
                 {
-                    if( mainPlayer->getPosition().x + mainPlayer->front()->getGlobalBounds().width - 140 >= e->getPosition().x &&
-                        mainPlayer->getPosition().x - 50 <= e->getPosition().x )
+                    if( !(e->hasClass("enonplayablehitable") && dialogBox) )
+                        e->update();
+                }
+
+                if( e->getPosition().x < 0 )
+                    e->destroy();
+
+                if( !e->direction || e->drawableObjects.empty() )
+                {
+                    worldEntities.erase(it--);
+                    continue;
+                }
+
+                if( e->hasClass("enonplayablehitable") )
+                {
+                    bool hitable = false;
+
+                    if( mainPlayer->direction == mainPlayer->D_RIGHT )
                     {
-                        hitable = true;
-                    }
-                }
-                else
-                {
-                    if( mainPlayer->getPosition().x + 50  >= e->getPosition().x + e->front()->getGlobalBounds().width &&
-                        mainPlayer->getPosition().x - 100 <= e->getPosition().x + e->front()->getGlobalBounds().width )
-                    {
-                        hitable = true;
-                    }
-                }
-
-                if( hitable )
-                {
-                    mainPlayer->hitableEntities.push_back(e);
-                }
-            }
-
-            if( mainPlayer->getPosition().x + mainPlayer->front()->getGlobalBounds().width - 170 >= e->getPosition().x &&
-                mainPlayer->getPosition().x <= e->getPosition().x + e->front()->getGlobalBounds().width )
-            {
-                mainPlayer->currentEntity = e;
-
-                if( e->hasClass("es1ghost") )
-                {
-//                    mainPlayer->slap(e->direction);
-//                    e->flipHorizontally();
-                }
-
-                if( e->hasClass("elocker") )
-                {
-                    for( auto &s : static_cast<ES1Locker*>(e)->slots )
-                    {
-                        if( mainPlayer->getPosition().x + mainPlayer->front()->getGlobalBounds().width - 170 >= e->getPosition().x + s->getPosition().x &&
-                            mainPlayer->getPosition().x <= e->getPosition().x + s->getPosition().x + s->getCharacterSize() )
+                        if( mainPlayer->getPosition().x + mainPlayer->front()->getGlobalBounds().width - 140 >= e->getPosition().x &&
+                            mainPlayer->getPosition().x - 50 <= e->getPosition().x )
                         {
-                            mainPlayer->currentTextEntity = s;
+                            hitable = true;
                         }
                     }
+                    else
+                    {
+                        if( mainPlayer->getPosition().x + 50  >= e->getPosition().x + e->front()->getGlobalBounds().width &&
+                            mainPlayer->getPosition().x - 100 <= e->getPosition().x + e->front()->getGlobalBounds().width )
+                        {
+                            hitable = true;
+                        }
+                    }
+
+                    if( hitable )
+                    {
+                        mainPlayer->hitableEntities.push_back(e);
+                    }
                 }
 
-                if( e->hasClass("edoor") )
+                if( mainPlayer->getPosition().x + mainPlayer->front()->getGlobalBounds().width - 170 >= e->getPosition().x &&
+                    mainPlayer->getPosition().x <= e->getPosition().x + e->front()->getGlobalBounds().width )
                 {
-//                    actionLabel.setString("Entrar (A)");
-//                    actionDescription.setString("Uma porta. Para onde isso leva?");
-                }
+                    mainPlayer->currentEntity = e;
 
-                if( e->hasClass("eitem") )
-                {
-//                    actionLabel.setString("Pegar (A)");
-//                    actionDescription.setString("You see a " + e->getAlias() + ".\n" + e->getDescription());
-                }
+                    if( e->hasClass("es1ghost") )
+                    {
+//                        mainPlayer->slap(mainPlayer->D_LEFT);
+//                        if( !mainPlayer )
+//                            continue;
 
-                if( e->hasClass("enonplayable") )
-                {
-//                    actionLabel.setString("Matar (A)");
-//                    actionDescription.setString("Esse cara parece comigo.");
+//                        e->flipHorizontally();
+                    }
+
+                    if( e->hasClass("elocker") )
+                    {
+                        for( auto &s : static_cast<ES1Locker*>(e)->slots )
+                        {
+                            if( mainPlayer->getPosition().x + mainPlayer->front()->getGlobalBounds().width - 170 >= e->getPosition().x + s->getPosition().x &&
+                                mainPlayer->getPosition().x <= e->getPosition().x + s->getPosition().x + s->getCharacterSize() )
+                            {
+                                mainPlayer->currentTextEntity = s;
+                            }
+                        }
+                    }
+
+                    if( e->hasClass("edoor") )
+                    {
+    //                    actionLabel.setString("Entrar (A)");
+    //                    actionDescription.setString("Uma porta. Para onde isso leva?");
+                    }
+
+                    if( e->hasClass("eitem") )
+                    {
+    //                    actionLabel.setString("Pegar (A)");
+    //                    actionDescription.setString("You see a " + e->getAlias() + ".\n" + e->getDescription());
+                    }
+
+                    if( e->hasClass("enonplayable") )
+                    {
+    //                    actionLabel.setString("Matar (A)");
+    //                    actionDescription.setString("Esse cara parece comigo.");
+                    }
                 }
             }
         }

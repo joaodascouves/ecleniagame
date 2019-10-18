@@ -11,21 +11,18 @@ EPlayable::EPlayable()
 {
     addClass("emainplayer");
 
-    ResourceManager::get().loadTexture("sheet1.png");
-    ResourceManager::get().textureMap.at("sheet1")->setSmooth(true);
-
     front()->setOrigin(120, 0);
-    front()->setTexture(*ResourceManager::get().textureMap.at("sheet1"));
-    front()->setTextureRect(sf::IntRect(0 + 5, 0, 399 - 5, 369));
+    setTextureName("emainplayer");
 
     configAnimation(11, 2);
     addSequence(S_STANDING, {0, 0, 4, 0, 0});
     addSequence(S_RUNNING, {0, 5, 11, 0, 0});
     addSequence(S_HITTING, {1, 1, 4, 0, 0});
     addSequence(S_SLAPPED, {0, 6, 6, 0, 0});
+    addSequence(S_DYING, {0, 6, 6, 0, 0});
 
     inventory = new Inventory;
-    life = 1000;
+    life = 10;
     horizontalSpeed = 3.5f;
 }
 

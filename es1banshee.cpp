@@ -7,8 +7,7 @@ ES1Banshee::ES1Banshee()
 {
     addClass("es1banshee");
 
-    ResourceManager::get().loadTexture("banshee.png");
-    front()->setTexture(*ResourceManager::get().textureMap.at("banshee"));
+    setTextureName("es1banshee");
 
     configAnimation(8, 1);
     addSequence(S_FLOATING, {0, 0, 8, 0, 0});
