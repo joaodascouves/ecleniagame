@@ -4,23 +4,33 @@
 #include "enonplayablehitable.h"
 #include "inventory.h"
 
+#include <SFML/Audio.hpp>
+#include <list>
+
 class EPlayable : public ENonPlayableHitable
 {
 public:
     EPlayable();
-    virtual ~EPlayable(){}
+    EPlayable(const EPlayable&);
+    virtual ~EPlayable() override {}
 
     sf::Clock hitClock;
 
-    virtual void _update();
+    virtual void _update() override;
     virtual void hit();
 
-    Entity<sf::Sprite>* currentEntity;
-    sf::Text* currentTextEntity;
+    virtual sf::FloatRect getRelativeBounds() override;
+
+    std::list<Entity<sf::Sprite>*> currentEntity;
+    std::list<Entity<sf::RectangleShape>*> currentRectEntity;
+
+    std::list<sf::Text*> currentTextEntity;
 
     std::vector<Entity<sf::Sprite>*> hitableEntities;
 
     Inventory* inventory;
+
+    //sf::Sound hitSound;
 };
 
 #endif // EPLAYABLE_H

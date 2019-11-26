@@ -11,7 +11,7 @@ class EDoor : public Entity<sf::Sprite>
 {
 public:
     EDoor();
-    virtual ~EDoor();
+    virtual ~EDoor() override;
 
     enum
     {
@@ -27,7 +27,7 @@ public:
     int getType(short) const;
 
     virtual void update() override;
-    virtual void action(Entity*);
+    virtual void action(Entity*) override;
 };
 
 #endif // EDOOR_H

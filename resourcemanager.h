@@ -20,7 +20,7 @@ public:
     void clear();
 
     template<class T>
-    T& getRef(std::string);
+    T& getRef(const std::string&);
 
 //private:
     std::map<std::string, sf::Texture*> textureMap;

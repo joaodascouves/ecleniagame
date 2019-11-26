@@ -24,7 +24,7 @@ void ResourceManager::clear()
 }
 
 template<class T>
-T& ResourceManager::getRef(std::string alias)
+T& ResourceManager::getRef(const std::string& alias)
 {
     std::map<std::string, T*>* resourceMap;
     std::string directory;
@@ -73,6 +73,6 @@ T& ResourceManager::getRef(std::string alias)
     return *resource;
 }
 
-template sf::Texture& ResourceManager::getRef<sf::Texture>(std::string);
-template sf::Font& ResourceManager::getRef<sf::Font>(std::string);
-template  sf::SoundBuffer& ResourceManager::getRef<sf::SoundBuffer>(std::string);
+template sf::Texture& ResourceManager::getRef<sf::Texture>(const std::string&);
+template sf::Font& ResourceManager::getRef<sf::Font>(const std::string&);
+template  sf::SoundBuffer& ResourceManager::getRef<sf::SoundBuffer>(const std::string&);

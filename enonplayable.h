@@ -7,7 +7,7 @@ class ENonPlayable : public Entity<sf::Sprite>
 {
 public:
     ENonPlayable();
-    virtual ~ENonPlayable(){}
+    virtual ~ENonPlayable() override {}
 
     enum
     {
@@ -19,7 +19,7 @@ public:
         S_DYING
     };
 
-    virtual void update();
+    virtual void update() override;
     virtual void _update(){}
 
     float speed = .0f;

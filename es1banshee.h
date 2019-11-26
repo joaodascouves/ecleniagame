@@ -8,10 +8,10 @@ class ES1Banshee : public ENonPlayable
 {
 public:
     ES1Banshee();
-    virtual ~ES1Banshee(){}
+    virtual ~ES1Banshee() override {}
 
-    virtual void _update();
-    virtual void action(Entity*);
+    virtual void _update() override;
+    virtual void action(Entity*) override;
 
     EDialogBox* dialogBox;
 };

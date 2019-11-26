@@ -9,7 +9,7 @@ public:
     EItem();
     EItem(const EItem&);
 
-    virtual void action(Entity*);
+    virtual void action(Entity*) override;
 };
 
 #endif // EITEM_H

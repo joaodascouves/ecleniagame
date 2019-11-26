@@ -7,11 +7,15 @@ class ENonPlayableHitable : public ENonPlayable
 {
 public:
     ENonPlayableHitable();
-    virtual ~ENonPlayableHitable(){}
+    ENonPlayableHitable(const ENonPlayableHitable&);
+
+    virtual ~ENonPlayableHitable() override {}
+
+    sf::Clock slapClock;
 
     virtual void moveLeft();
     virtual void moveRight();
-    virtual void slap(signed short);
+    virtual void slap(ENonPlayableHitable*);
 
     unsigned short life = 3;
     float horizontalSpeed = .9f;

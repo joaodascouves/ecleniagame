@@ -16,6 +16,6 @@ EItem::EItem(const EItem& item)
 void EItem::action(Entity *mainPlayer)
 {
     static_cast<EPlayable*>(mainPlayer)->inventory->acquireItem(
-                static_cast<EItem *>(static_cast<EPlayable*>(mainPlayer)->currentEntity));
+                static_cast<EItem *>(static_cast<EPlayable*>(mainPlayer)->currentEntity.back()));
 }
 

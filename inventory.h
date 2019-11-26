@@ -14,7 +14,7 @@ public:
     std::map<std::string, EItem*> items;
 
     void acquireItem(EItem*);
-    bool has(std::string);
+    bool has(const std::string&);
 };
 
 #endif // INVENTORY_H

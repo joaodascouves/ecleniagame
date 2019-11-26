@@ -2,12 +2,13 @@
 #include "edoor.h"
 #include "resourcemanager.h"
 #include "sfaseteste1.h"
+#include "scombat.h"
 
 #include <iostream>
 #include <cstdlib>
 #include <cmath>
 
-SWorld::SWorld()
+SWorld::SWorld() : dialogBox(nullptr), currentPanel(nullptr)
 {
     worldView.setSize(800, 600);
     worldView.setCenter(worldView.getSize().x/2, worldView.getSize().y/2);
@@ -16,29 +17,22 @@ SWorld::SWorld()
     sceneryView.setCenter(worldView.getCenter());
     sceneryView.setViewport(worldView.getViewport());
 
-//    inventoryView.setCenter(worldView.getCenter());
-    interfaceView.setViewport(sf::FloatRect(.0f, .0f, 1.f, 1.f));
+    std::fill_n(keyPress, 7, 0);
 
-//    font.loadFromFile("/usr/share/fonts/msttcore/arial.ttf");
-
-//    actionDescription.setFont(font);
-//    actionDescription.setCharacterSize(20);
-//    actionDescription.setFillColor(sf::Color(250, 0, 0));
-//    actionDescription.setString("Teste");
-//    actionDescription.setPosition(20, 20);
-
-//    actionLabel.setFont(font);
-//    actionLabel.setCharacterSize(20);
-//    actionLabel.setFillColor(sf::Color(0, 250, 0));
-//    actionLabel.setString("");
-//    actionLabel.setPosition(550, 20);
+    mainPlayer = nullptr;
 }
 
 SWorld::~SWorld()
 {
-    ResourceManager::get().clear();
+    //ResourceManager::get().clear();
 
     for( auto& obj : worldEntities )
+    {
+        obj->destroy();
+        delete obj;
+    }
+
+    for( auto& obj : sceneryEntities )
     {
         obj->destroy();
         delete obj;
@@ -70,21 +64,22 @@ void SWorld::draw()
     for( auto& e : worldEntitiesRect )
         GameInstance::get().window.draw(*e);
 
-//    GameInstance::get().window.draw(actionDescription);
+    //GameInstance::get().window.draw(*actionDescription);
 //    GameInstance::get().window.draw(actionLabel);
 }
 
 void SWorld::update()
 {
-//    actionDescription.setString("Teste.");
-//    actionLabel.setString("");
-
     _update();
 
     if( mainPlayer )
     {
-        mainPlayer->currentEntity = nullptr;
-        mainPlayer->currentTextEntity = nullptr;
+        if( mainPlayer->currentEntity.back() )
+            mainPlayer->currentEntity.pop_back();
+
+        if( mainPlayer->currentTextEntity.back() )
+            mainPlayer->currentTextEntity.pop_back();
+
         mainPlayer->hitableEntities.clear();
 
         for( auto it = worldEntities.begin(); it != worldEntities.end(); it++ )
@@ -112,16 +107,16 @@ void SWorld::update()
 
                     if( mainPlayer->direction == mainPlayer->D_RIGHT )
                     {
-                        if( mainPlayer->getPosition().x + mainPlayer->front()->getGlobalBounds().width - 140 >= e->getPosition().x &&
-                            mainPlayer->getPosition().x - 50 <= e->getPosition().x )
+                        if( mainPlayer->getPosition().x + mainPlayer->getRelativeBounds().width >= e->getPosition().x &&
+                            mainPlayer->getPosition().x - 60 <= e->getPosition().x )
                         {
                             hitable = true;
                         }
                     }
                     else
                     {
-                        if( mainPlayer->getPosition().x + 50  >= e->getPosition().x + e->front()->getGlobalBounds().width &&
-                            mainPlayer->getPosition().x - 100 <= e->getPosition().x + e->front()->getGlobalBounds().width )
+                        if( mainPlayer->getPosition().x + 50  >= e->getPosition().x + e->getRelativeBounds().width &&
+                            mainPlayer->getPosition().x - 100 <= e->getPosition().x + e->getRelativeBounds().width )
                         {
                             hitable = true;
                         }
@@ -133,18 +128,66 @@ void SWorld::update()
                     }
                 }
 
-                if( mainPlayer->getPosition().x + mainPlayer->front()->getGlobalBounds().width - 170 >= e->getPosition().x &&
-                    mainPlayer->getPosition().x <= e->getPosition().x + e->front()->getGlobalBounds().width )
+                if( mainPlayer->getPosition().x + mainPlayer->getRelativeBounds().width >= e->getPosition().x &&
+                    mainPlayer->getPosition().x + 60 <= e->getPosition().x + e->getRelativeBounds().width )
                 {
-                    mainPlayer->currentEntity = e;
+                    mainPlayer->currentEntity.push_back(e);
 
                     if( e->hasClass("es1ghost") )
                     {
-//                        mainPlayer->slap(mainPlayer->D_LEFT);
-//                        if( !mainPlayer )
-//                            continue;
+                        if( !currentPanel )
+                        {
+                            EPanel* combatPrompt = new EPanel;
+                            spawn(combatPrompt);
 
-//                        e->flipHorizontally();
+                            combatPrompt->front()->setSize(sf::Vector2f(300, 300));
+                            combatPrompt->front()->setFillColor(sf::Color(30, 30, 250, 250));
+                            combatPrompt->appendLine("Desafiar");
+                            combatPrompt->appendLine("Ignorar");
+                            combatPrompt->toggleChooseable(true);
+
+                            combatPrompt->actionFunc = std::move([this, e](short choice){
+
+                                deactivatePanel();
+
+                                if( choice == 0 )
+                                {
+                                    SCombat* combatState  = new SCombat(
+                                                static_cast<ENonPlayableHitable*>(mainPlayer),
+                                                static_cast<ENonPlayableHitable*>(e)
+                                                );
+
+                                    combatState->sceneryEntities.push_back(new Entity<sf::Sprite>);
+                                    combatState->sceneryEntities.back()->setTextureName("es1scenery1");
+
+                                    std::fill_n(keyPress, 7, 0);
+
+                                    GameInstance::get().pushState(combatState);
+                                }
+
+                            });
+
+                            activatePanel(combatPrompt);
+                        }
+
+//                        ENonPlayableHitable* enemy = static_cast<ENonPlayableHitable*>(e);
+//                        enemy->speed = 0.5f;
+
+//                        if( mainPlayer->getStatus() != ENonPlayableHitable::S_HITTING &&
+//                                e->getStatus() != ENonPlayableHitable::S_SLAPPED &&
+//                                e->getStatus() != ENonPlayableHitable::S_DYING )
+//                        {
+//                            mainPlayer->slap(enemy);
+
+//                            if( e->direction == mainPlayer->direction &&
+//                                e->getPosition().x > mainPlayer->getPosition().x )
+//                            {
+//                                e->flipHorizontally();
+//                            }
+
+//                            if( !mainPlayer )
+//                                continue;
+//                        }
                     }
 
                     if( e->hasClass("elocker") )
@@ -154,7 +197,7 @@ void SWorld::update()
                             if( mainPlayer->getPosition().x + mainPlayer->front()->getGlobalBounds().width - 170 >= e->getPosition().x + s->getPosition().x &&
                                 mainPlayer->getPosition().x <= e->getPosition().x + s->getPosition().x + s->getCharacterSize() )
                             {
-                                mainPlayer->currentTextEntity = s;
+                                mainPlayer->currentTextEntity.push_back(s);
                             }
                         }
                     }
@@ -180,7 +223,17 @@ void SWorld::update()
             }
         }
 
-        mainPlayer->update();
+        if( !mainPlayer->currentEntity.back() )
+        {
+            if( currentPanel )
+            {
+                currentPanel->hide();
+                destroyPanel();
+            }
+        }
+
+        if( mainPlayer->front() )
+            mainPlayer->update();
     }
 
 }
@@ -188,6 +241,11 @@ void SWorld::update()
 void SWorld::handleInput()
 {
     sf::Event ev;
+
+    keyPress[K_UP] = false;
+    keyPress[K_DOWN] = false;
+    keyPress[K_HIT] = false;
+    keyPress[K_ACTION] = false;
 
     while( GameInstance::get().window.pollEvent(ev) )
     {
@@ -215,6 +273,14 @@ void SWorld::handleInput()
                 keyPress[K_ESCAPE] = true;
                 break;
 
+            case sf::Keyboard::Up:
+                keyPress[K_UP] = true;
+                break;
+
+            case sf::Keyboard::Down:
+                keyPress[K_DOWN] = true;
+                break;
+
             case sf::Keyboard::Left:
                 keyPress[K_LEFT] = false;
                 break;
@@ -236,72 +302,78 @@ void SWorld::handleInput()
         }
     }
 
-    if( !dialogBox )
-    {
-        if( keyPress[K_LEFT] )
-        {
-            if( mainPlayer->getPosition().x > 0 )
-            {
-                mainPlayer->moveLeft();
-                if( mainPlayer->getPosition().x > worldView.getSize().x/3 )
-                    sceneryView.move(mainPlayer->speed * -.1f, 0);
-
-                if( worldView.getCenter().x - worldView.getSize().x/2 > 0 )
-                {
-                    if( mainPlayer->speed >= mainPlayer->horizontalSpeed )
-                        worldView.move(mainPlayer->speed * -1, 0);
-                }
-            }
-        }
-
-        if( keyPress[K_RIGHT] )
-        {
-            mainPlayer->moveRight();
-            if( mainPlayer->getPosition().x > worldView.getSize().x/3 )
-                sceneryView.move(mainPlayer->speed * .1f, 0);
-
-            if( mainPlayer->getPosition().x > worldView.getCenter().x &&
-                mainPlayer->getPosition().x < worldView.getCenter().x + worldView.getSize().x/2 )
-            {
-                if( mainPlayer->speed >= mainPlayer->horizontalSpeed )
-                    worldView.move(mainPlayer->speed, 0);
-            }
-        }
-
-        if( keyPress[K_HIT] )
-        {
-            if( mainPlayer->getStatus() != mainPlayer->S_HITTING )
-            {
-                mainPlayer->sequences.at(mainPlayer->S_HITTING).pos = mainPlayer->sequences.at(mainPlayer->S_HITTING).begin;
-                mainPlayer->hit();
-            }
-
-            keyPress[K_HIT] = false;
-        }
-    }
-
-    if( keyPress[K_ACTION] )
-    {
-        if( !dialogBox )
-        {
-            if( mainPlayer->currentEntity )
-                mainPlayer->currentEntity->action(mainPlayer);
-        }
-
-        if( dialogBox )
-        {
-            dialogBox->next();
-
-            if( dialogBox->getStatus() == -1 )
-                dialogBox = nullptr;
-        }
-
-        keyPress[K_ACTION] = false;
-    }
+    controls();
 
     if( keyPress[K_ESCAPE] )
     {
         GameInstance::get().window.close();
+    }
+
+    if( keyPress[K_ACTION] )
+    {
+            if( mainPlayer->currentEntity.back() )
+                mainPlayer->currentEntity.back()->action(mainPlayer);
+
+            if( mainPlayer->currentRectEntity.back() )
+                mainPlayer->currentRectEntity.back()->action(nullptr);
+    }
+
+    if( currentPanel )
+    {
+        if( keyPress[K_UP] )
+            currentPanel->moveChoice(true);
+
+        if( keyPress[K_DOWN] )
+            currentPanel->moveChoice(false);
+    }
+}
+
+void SWorld::controls()
+{
+    if( mainPlayer )
+    if( mainPlayer->front() && mainPlayer->life > 0 )
+    {
+        if( !dialogBox )
+        {
+            if( keyPress[K_LEFT] )
+            {
+                if( mainPlayer->getPosition().x > 0 && mainPlayer->getStatus() != ENonPlayableHitable::S_SLAPPED )
+                {
+                    mainPlayer->moveLeft();
+                    if( mainPlayer->getPosition().x > worldView.getSize().x/3 )
+                        sceneryView.move(mainPlayer->speed * -.1f, 0);
+
+                    if( worldView.getCenter().x - worldView.getSize().x/2 > 0 )
+                    {
+                        if( mainPlayer->speed >= mainPlayer->horizontalSpeed )
+                            worldView.move(mainPlayer->speed * -1, 0);
+                    }
+                }
+            }
+
+            if( keyPress[K_RIGHT] )
+            {
+                mainPlayer->moveRight();
+                if( mainPlayer->getPosition().x > worldView.getSize().x/3 )
+                    sceneryView.move(mainPlayer->speed * .1f, 0);
+
+                if( mainPlayer->getPosition().x > worldView.getCenter().x &&
+                        mainPlayer->getPosition().x < worldView.getCenter().x + worldView.getSize().x/2 )
+                {
+                    if( mainPlayer->speed >= mainPlayer->horizontalSpeed )
+                        worldView.move(mainPlayer->speed, 0);
+                }
+            }
+
+            if( keyPress[K_HIT] )
+            {
+                if( mainPlayer->getStatus() != ENonPlayableHitable::S_HITTING )
+                {
+                    mainPlayer->sequences.at(ENonPlayableHitable::S_HITTING).pos = mainPlayer->sequences.at(ENonPlayableHitable::S_HITTING).begin;
+                    mainPlayer->hit();
+                }
+            }
+        }
     }
 }
 
@@ -321,13 +393,47 @@ void SWorld::spawn(Entity<sf::RectangleShape> *entity)
 
 void SWorld::showDialogBox(EDialogBox *newDialogBox)
 {
-    if( dialogBoxIterator != worldEntitiesRect.end() )
-        worldEntitiesRect.erase(dialogBoxIterator, dialogBoxIterator + 1);
+    if( mainPlayer->currentRectEntity.back() )
+        return;
+
+    if( dialogBoxIterator != worldEntitiesRect.rend() && dialogBoxIterator.base() > worldEntitiesRect.begin() )
+        worldEntitiesRect.erase(--(dialogBoxIterator.base()));
 
     dialogBox = newDialogBox;
     spawn(dialogBox);
 
-    dialogBoxIterator = worldEntitiesRect.end() - 1;
+    dialogBoxIterator = worldEntitiesRect.rbegin();
+    mainPlayer->currentRectEntity.push_back(dialogBox);
+}
+
+void SWorld::hideDialogBox()
+{
+    dialogBox = nullptr;
+    mainPlayer->currentRectEntity.pop_back();
+}
+
+void SWorld::activatePanel(EPanel *panel)
+{
+    panel->toggleActive(true);
+    currentPanel = panel;
+
+    mainPlayer->currentRectEntity.push_back(currentPanel);
+}
+
+void SWorld::deactivatePanel()
+{
+    currentPanel->toggleActive(false);
+    currentPanel = nullptr;
+
+    mainPlayer->currentRectEntity.pop_back();
+}
+
+void SWorld::destroyPanel()
+{
+    currentPanel->destroy();
+    currentPanel = nullptr;
+
+    mainPlayer->currentRectEntity.pop_back();
 }
 
 float SWorld::getFloor() const

@@ -10,11 +10,13 @@ public:
 
     std::vector<std::pair<sf::Text*, sf::Text*>> dialog;
 
-    void addDialog(std::string, std::string);
+    void addDialog(const std::string&, const std::string&);
 
     void preview();
     void next();
     void rewind();
+
+    void action(Entity *) override;
 
 private:
     sf::Text nextIcon;

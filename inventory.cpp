@@ -13,9 +13,7 @@ Inventory::Inventory(const Inventory& inventory)
     for( auto& i : inventory.items )
         acquireItem(i.second);
 
-    inventoryShape.setSize(sf::Vector2f(300, 140));
-    inventoryShape.setFillColor(sf::Color(195, 55, 122));
-    inventoryShape.setPosition(0, 70);
+    Inventory();
 }
 
 void Inventory::acquireItem(EItem *item)
@@ -29,7 +27,7 @@ void Inventory::acquireItem(EItem *item)
     }
 }
 
-bool Inventory::has(std::string alias)
+bool Inventory::has(const std::string& alias)
 {
     return !(items.find(alias) == items.end());
 }

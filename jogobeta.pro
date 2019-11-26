@@ -1,5 +1,5 @@
 TEMPLATE = app
-CONFIG += console c++11
+CONFIG += console c++17
 CONFIG -= app_bundle
 CONFIG -= qt
 
@@ -13,6 +13,7 @@ SOURCES += \
         enonplayable.cpp \
         enonplayablehitable.cpp \
         entity.cpp \
+        epanel.cpp \
         eplayable.cpp \
         es1banshee.cpp \
         es1ghost.cpp \
@@ -22,6 +23,7 @@ SOURCES += \
         inventory.cpp \
         main.cpp \
         resourcemanager.cpp \
+        scombat.cpp \
         sfaseteste1.cpp \
         smainmenu.cpp \
         spawnmanager.cpp \
@@ -37,6 +39,7 @@ HEADERS += \
     enonplayable.h \
     enonplayablehitable.h \
     entity.h \
+    epanel.h \
     eplayable.h \
     es1banshee.h \
     es1ghost.h \
@@ -45,6 +48,7 @@ HEADERS += \
     gamestate.h \
     inventory.h \
     resourcemanager.h \
+    scombat.h \
     sfaseteste1.h \
     smainmenu.h \
     spawnmanager.h \

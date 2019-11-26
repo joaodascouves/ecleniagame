@@ -20,6 +20,18 @@ sf::IntRect Animation::currentFrame()
     return frameRect;
 }
 
+sf::FloatRect Animation::getRelativeBounds()
+{
+    sf::FloatRect relativeBounds;
+
+    relativeBounds.top = 0;
+    relativeBounds.left = 0;
+    relativeBounds.width = frameWidth;
+    relativeBounds.height = frameHeight;
+
+    return relativeBounds;
+}
+
 void Animation::addSequence(int status, sequenceMap newSequence)
 {
     sequences.insert(std::pair<int, sequenceMap>(status, std::move(newSequence)));

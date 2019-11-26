@@ -4,6 +4,7 @@
 #include "gamestate.h"
 #include "eplayable.h"
 #include "edialogbox.h"
+#include "epanel.h"
 
 #include <vector>
 
@@ -11,12 +12,14 @@ class SWorld : public GameState
 {
 public:
     SWorld();
-    virtual ~SWorld();
+    virtual ~SWorld() override;
 
-    virtual void draw();
-    virtual void update();
+    virtual void draw() override;
+    virtual void update() override;
     virtual void _update(){}
-    virtual void handleInput();
+
+    virtual void handleInput() override;
+    virtual void controls();
 
     virtual float getFloor() const;
 
@@ -24,6 +27,11 @@ public:
     void spawn(Entity<sf::RectangleShape>*);
 
     void showDialogBox(EDialogBox*);
+    void hideDialogBox();
+
+    void activatePanel(EPanel*);
+    void deactivatePanel();
+    void destroyPanel();
 
     enum
     {
@@ -31,10 +39,12 @@ public:
         K_RIGHT,
         K_HIT,
         K_ACTION,
-        K_ESCAPE
+        K_ESCAPE,
+        K_UP,
+        K_DOWN
     };
 
-    short keyPress[5] = {0, 0, 0, 0, 0};
+    short keyPress[7];
 
     sf::View sceneryView;
     sf::View worldView;
@@ -42,17 +52,18 @@ public:
 
     float screenSpeed = 50.0f;
 
-    sf::Text actionLabel;
-    sf::Text actionDescription;
+    sf::Text* actionLabel;
+    sf::Text* actionDescription;
 
     std::vector<Entity<sf::Sprite>*> sceneryEntities;
     std::vector<Entity<sf::Sprite>*> worldEntities;
     std::vector<Entity<sf::RectangleShape>*> worldEntitiesRect;
 
     EPlayable* mainPlayer;
-    EDialogBox* dialogBox = nullptr;
+    EDialogBox* dialogBox;
+    EPanel* currentPanel;
 
-    std::vector<Entity<sf::RectangleShape>*>::iterator dialogBoxIterator;
+    std::vector<Entity<sf::RectangleShape>*>::reverse_iterator dialogBoxIterator;
 };
 
 #endif // SWORLD_H

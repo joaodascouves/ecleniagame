@@ -31,14 +31,14 @@ void ES1Locker::update()
 
 void ES1Locker::action(Entity* mainPlayer)
 {
-    if( static_cast<EPlayable*>(mainPlayer)->currentTextEntity )
+    if( static_cast<EPlayable*>(mainPlayer)->currentTextEntity.back() )
     {
-        int numericVal = atoi((const char *)static_cast<EPlayable*>(mainPlayer)->currentTextEntity->getString().toUtf8().c_str());
+        int numericVal = atoi((const char *)static_cast<EPlayable*>(mainPlayer)->currentTextEntity.back()->getString().toUtf8().c_str());
         if( numericVal < 9 )
             numericVal++;
         else
             numericVal = 0;
 
-        static_cast<EPlayable*>(mainPlayer)->currentTextEntity->setString(std::to_string(numericVal));
+        static_cast<EPlayable*>(mainPlayer)->currentTextEntity.back()->setString(std::to_string(numericVal));
     }
 }

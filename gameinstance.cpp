@@ -1,6 +1,8 @@
 #include "gameinstance.h"
 #include "gamestate.h"
 
+#include <iostream>
+
 GameInstance::GameInstance()
 {
     sf::ContextSettings settings;

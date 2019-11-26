@@ -7,12 +7,12 @@ class ES1Locker : public Entity<sf::Sprite>
 {
 public:
     ES1Locker();
-    virtual ~ES1Locker(){}
+    virtual ~ES1Locker() override {}
 
     sf::Text* slots[4];
 
-    virtual void update();
-    virtual void action(Entity*);
+    virtual void update() override;
+    virtual void action(Entity*) override;
 };
 
 #endif // ES1LOCKER_H

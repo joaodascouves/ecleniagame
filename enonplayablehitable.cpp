@@ -1,8 +1,19 @@
 #include "enonplayablehitable.h"
+#include "gameinstance.h"
+#include "sworld.h"
+
+#include <iostream>
 
 ENonPlayableHitable::ENonPlayableHitable()
 {
     addClass("enonplayablehitable");
+}
+
+ENonPlayableHitable::ENonPlayableHitable(const ENonPlayableHitable& entity) :
+    life(entity.life), horizontalSpeed(entity.horizontalSpeed)
+{
+    copy(entity);
+    ENonPlayableHitable();
 }
 
 void ENonPlayableHitable::moveLeft()
@@ -39,21 +50,45 @@ void ENonPlayableHitable::moveRight()
     clock.restart();
 }
 
-void ENonPlayableHitable::slap(signed short enemyDirection)
+void ENonPlayableHitable::slap(ENonPlayableHitable* enemy)
 {
     if( life > 0 )
     {
-        setStatus(S_SLAPPED, true);
+        timer = slapClock.getElapsedTime();
 
-        move(40 * horizontalSpeed * enemyDirection, 0);
-        if( !hasClass("emainplayer") )
+        if( timer.asSeconds() > .3f )
         {
+            if( !(hasClass("emainplayer") && getStatus() == S_SLAPPED) )
+            {
+                setStatus(S_SLAPPED, true);
 
-            if(  enemyDirection == direction )
-                flipHorizontally();
+                SWorld* currentLevel = static_cast<SWorld*>(GameInstance::get().peekState());
+                if( getPosition().x - 50 > currentLevel->worldView.getCenter().x - currentLevel->worldView.getSize().x/2 &&
+                        getPosition().x + 50 < currentLevel->worldView.getCenter().x + currentLevel->worldView.getSize().x/2 )
+                {
+                    if( enemy->getPosition().x >= getPosition().x )
+                    {
+                        move(-30, 0);
+                    }
+
+                    else
+                    {
+                        move(30, 0);
+                    }
+                }
+
+
+                if( !hasClass("emainplayer") )
+                {
+                    if(  enemy->direction == direction )
+                        flipHorizontally();
+                }
+
+                if( --life <= 0 )
+                    setStatus(S_DYING, true);
+            }
+
+            slapClock.restart();
         }
-
-        if( --life <= 0 )
-            setStatus(S_DYING, true);
     }
 }

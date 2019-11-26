@@ -9,7 +9,10 @@ class Entity : public sf::Drawable, public sf::Transformable, public Animation
 {
 public:
     Entity();
-    virtual ~Entity();
+    Entity(const Entity&);
+    virtual ~Entity() override;
+
+    void copy(const Entity&);
 
     std::vector<T*> drawableObjects;
     std::vector<sf::Text*> drawableTextObjects;
@@ -29,28 +32,27 @@ public:
     virtual void destroy();
     virtual void action(Entity*){}
 
-    void hide(){ if( status!= -1 ){ previousStatus = status; status = -1; } }
-    void show(){ status = previousStatus; }
-    bool isSpawned() const { return spawned; }
+    void hide();
+    void show();
+    bool isSpawned() const;
 
-    void setTextureName(std::string);
+    void setTextureName(const std::string&);
+    std::string getTextureName() const;
 
     void setStatus(short);
     void setStatus(short, bool);
-    short getStatus() const { return status; }
+    short getStatus() const;
 
-    void addClass(std::string newClass){ classes.push_back(std::move(newClass)); }
-    void setAlias(std::string);
-    void setDescription(std::string newDescription){ description = std::move(newDescription); }
+    void addClass(const std::string&);
+    void setAlias(const std::string&);
+    void setDescription(const std::string&);
 
     void configAnimation(int, int);
 
-    std::string getAlias() const { return alias; }
-    std::string getDescription() const { return description; }
-    bool hasClass(std::string searchClass) const
-    {
-        return std::find(classes.begin(), classes.end(), searchClass) != classes.end();
-    }
+    std::string getAlias() const;
+    std::string getDescription() const;
+
+    bool hasClass(const std::string&) const;
 
 private:
     std::string alias;

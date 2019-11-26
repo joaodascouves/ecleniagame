@@ -1,5 +1,4 @@
 #include "enonplayable.h"
-#include "resourcemanager.h"
 
 #include <iostream>
 

@@ -1,6 +1,7 @@
 #include "edialogbox.h"
 #include "gameinstance.h"
 #include "resourcemanager.h"
+#include "sworld.h"
 
 EDialogBox::EDialogBox()
 {
@@ -19,7 +20,7 @@ EDialogBox::EDialogBox()
     drawableTextObjects.push_back(&nextIcon);
 }
 
-void EDialogBox::addDialog(std::string newTitle, std::string newBody)
+void EDialogBox::addDialog(const std::string& newTitle, const std::string& newBody)
 {
     sf::Text* title = new sf::Text;
     sf::Text* body = new sf::Text;
@@ -75,4 +76,12 @@ void EDialogBox::next()
 void EDialogBox::rewind()
 {
     position = dialog.begin();
+}
+
+void EDialogBox::action(Entity *entity)
+{
+    next();
+
+    if( getStatus() == -1 )
+        static_cast<SWorld*>(GameInstance::get().peekState())->hideDialogBox();
 }

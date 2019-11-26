@@ -10,8 +10,8 @@ public:
     Animation();
 
     size_t frames;
-    unsigned int frameWidth;
-    unsigned int frameHeight;
+    float frameWidth;
+    float frameHeight;
     bool sequenceEnd = false;
 
     enum { D_LEFT = -1, D_RIGHT = 1 };
@@ -33,6 +33,7 @@ public:
     std::map<int, sequenceMap> sequences;
 
     sf::IntRect currentFrame();
+    virtual sf::FloatRect getRelativeBounds();
 
     void addSequence(int, sequenceMap);
     bool hasSequence(int);
@@ -50,7 +51,6 @@ public:
 
 };
 
-// Declaração global da struct declarada dentro da classe
 typedef Animation::sequenceMap sequenceMap;
 
 #endif // ANIMATION_H
