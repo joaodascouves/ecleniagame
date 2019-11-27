@@ -7,7 +7,7 @@ class ES1Locker : public Entity<sf::Sprite>
 {
 public:
     ES1Locker();
-    virtual ~ES1Locker() override {}
+    ~ES1Locker() override = default;
 
     sf::Text* slots[4];
 

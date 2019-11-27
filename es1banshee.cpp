@@ -3,7 +3,7 @@
 #include "sworld.h"
 #include "resourcemanager.h"
 
-ES1Banshee::ES1Banshee()
+ES1Banshee::ES1Banshee() : dialogBox(new EDialogBox)
 {
     addClass("es1banshee");
 
@@ -11,8 +11,6 @@ ES1Banshee::ES1Banshee()
 
     configAnimation(8, 1);
     addSequence(S_FLOATING, {0, 0, 8, 0, 0});
-
-    dialogBox = new EDialogBox;
 }
 
 void ES1Banshee::_update()
@@ -27,5 +25,5 @@ void ES1Banshee::_update()
 void ES1Banshee::action(Entity *mainPlayer)
 {
     static_cast<SWorld*>(
-                GameInstance::get().peekState())->showDialogBox(std::move(dialogBox));
+                GameInstance::get().peekState())->showDialogBox(dialogBox);
 }

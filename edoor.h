@@ -11,7 +11,7 @@ class EDoor : public Entity<sf::Sprite>
 {
 public:
     EDoor();
-    virtual ~EDoor() override;
+    ~EDoor() override = default;
 
     enum
     {

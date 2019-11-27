@@ -8,11 +8,12 @@ class SCombat : public SWorld
 {
 public:
     SCombat(ENonPlayableHitable*, ENonPlayableHitable*);
+    ~SCombat() override = default;
 
     virtual void update() override;
     virtual void controls() override {}
 
-    EPanel* leftEPanel, *rightEPanel, *actionPanel;
+    EPanel* leftPanel, *rightPanel, *actionPanel;
     ENonPlayableHitable* challenger, *enemy;
 };
 

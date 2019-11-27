@@ -1,10 +1,16 @@
 #include "epanel.h"
 #include "resourcemanager.h"
 
-EPanel::EPanel() : chooseable(false), choice(1), choiceMark(new sf::Text)
+EPanel::EPanel(const sf::Vector2f& size, const sf::Color& color) :
+    chooseable(false),
+    choice(1),
+    choiceMark(new sf::Text)
 {
     choiceMark->setFont(ResourceManager::get().getRef<sf::Font>("arial"));
     choiceMark->setString(">");
+
+    front()->setSize(size);
+    front()->setFillColor(color);
 
     drawableTextObjects.push_back(choiceMark);
 }

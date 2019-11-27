@@ -23,6 +23,7 @@ EPlayable::EPlayable() : inventory(new Inventory)
 
     life = 10;
     horizontalSpeed = 3.5f;
+    spawned = true;
 }
 
 EPlayable::EPlayable(const EPlayable& player)

@@ -18,20 +18,17 @@ void GameInstance::changeState(GameState *newState)
         popState();
 
     pushState(newState);
-    return;
 }
 
 void GameInstance::pushState(GameState *newState)
 {
     states.push(std::move(newState));
-    return;
 }
 
 void GameInstance::popState()
 {
     delete states.top();
     states.pop();
-    return;
 }
 
 GameState* GameInstance::peekState()

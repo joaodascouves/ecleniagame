@@ -3,13 +3,10 @@
 #include "resourcemanager.h"
 
 template<class T>
-Entity<T>::Entity()
+Entity<T>::Entity() : index(0), status(0), previousStatus(0), spawned(false)
 {
+    drawableObjects.reserve(1);
     drawableObjects.push_back(new T);
-
-    status = 0;
-    previousStatus = 0;
-    spawned = false;
 }
 
 template<class T>
@@ -17,6 +14,7 @@ Entity<T>::~Entity()
 {
     destroy();
     direction = 0;
+    spawned = false;
 }
 
 template<>
@@ -77,11 +75,11 @@ void Entity<T>::flipHorizontally()
 template<class T>
 void Entity<T>::destroy()
 {
-    for( auto &obj : drawableObjects )
-    {
-        delete obj;
-        obj = nullptr;
-    }
+//    for( auto &obj : drawableObjects )
+//    {
+//        delete obj;
+//        obj = nullptr;
+//    }
 
     drawableObjects.clear();
     drawableTextObjects.clear();

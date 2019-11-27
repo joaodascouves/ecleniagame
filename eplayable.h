@@ -12,7 +12,7 @@ class EPlayable : public ENonPlayableHitable
 public:
     EPlayable();
     EPlayable(const EPlayable&);
-    virtual ~EPlayable() override {}
+    ~EPlayable() override = default;
 
     sf::Clock hitClock;
 

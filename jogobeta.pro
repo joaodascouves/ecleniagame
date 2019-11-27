@@ -4,6 +4,7 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 QMAKE_CXXFLAGS += -Wunused-parameter -std=gnu++17
+LIBS += -lsfml-system -lsfml-window -lsfml-graphics -lsfml-audio
 
 SOURCES += \
         animation.cpp \
@@ -28,8 +29,6 @@ SOURCES += \
         smainmenu.cpp \
         spawnmanager.cpp \
         sworld.cpp
-
-LIBS += -lsfml-system -lsfml-window -lsfml-graphics -lsfml-audio
 
 HEADERS += \
     animation.h \

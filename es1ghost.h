@@ -7,9 +7,9 @@ class ES1Ghost : public ENonPlayableHitable
 {
 public:
     ES1Ghost();
-    virtual ~ES1Ghost() override {}
+    ~ES1Ghost() override = default;
 
-    virtual void _update() override;
+    //virtual void _update() override;
 };
 
 #endif // ES1GHOST_H

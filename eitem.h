@@ -8,6 +8,7 @@ class EItem : public Entity<sf::Sprite>
 public:
     EItem();
     EItem(const EItem&);
+    ~EItem() override = default;
 
     virtual void action(Entity*) override;
 };

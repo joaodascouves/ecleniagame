@@ -20,8 +20,8 @@ ES1Ghost::ES1Ghost()
     horizontalSpeed = 1.3f;
 }
 
-void ES1Ghost::_update()
-{
+//void ES1Ghost::_update()
+//{
 //    if( direction == D_RIGHT )
 //        moveRight();
 //    else
@@ -40,4 +40,4 @@ void ES1Ghost::_update()
 //        if( mainPlayer->getPosition().x - getPosition().x < 200 )
 //            horizontalSpeed = 1.8f;
 //    }
-}
+//}

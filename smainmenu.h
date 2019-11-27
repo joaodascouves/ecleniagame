@@ -7,6 +7,7 @@ class SMainMenu : public GameState
 {
 public:
     SMainMenu();
+    ~SMainMenu() override = default;
 
     void draw();
     void update();

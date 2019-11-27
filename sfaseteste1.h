@@ -16,11 +16,12 @@ class SFaseTeste1 : public SWorld
 {
 public:
     SFaseTeste1();
+    ~SFaseTeste1() override = default;
 
     virtual void _update() override;
 
     EDoor<SFaseTeste1>* door1;
-    ES1Ghost* ghostTeste, *ghostTeste1, *ghostTeste2, *ghostTeste3;
+    ES1Ghost* ghostTeste, *ghostTeste1, *ghostTeste2;
     ES1Banshee* banshee;
 };
 

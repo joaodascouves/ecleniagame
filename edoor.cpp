@@ -22,13 +22,6 @@ EDoor<T>::EDoor()
 }
 
 template<class T>
-EDoor<T>::~EDoor()
-{
-//    if( location )
-//        delete location;
-}
-
-template<class T>
 void EDoor<T>::update()
 {
     tickAnimation(20, true);
@@ -38,7 +31,7 @@ void EDoor<T>::update()
 
     if( location && getStatus() == S_OPENED && timer.asSeconds() > 0.8f &&
         sequences.at(currentSequence).pos + 1 == sequences.at(currentSequence).end )
-        GameInstance::get().changeState(location);
+        GameInstance::get().changeState(std::move(location));
 
 }
 

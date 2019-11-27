@@ -11,8 +11,12 @@ SFaseTeste1::SFaseTeste1()
     sceneryEntities.back()->setPosition(sceneryEntities.at(0)->front()->getGlobalBounds().width, 0);
 
     door1 = new EDoor<SFaseTeste1>;
+    ghostTeste = new ES1Ghost;
+    ghostTeste1 = new ES1Ghost;
+    ghostTeste2 = new ES1Ghost;
+    banshee = new ES1Banshee;
 
-    door1->conditionFunc = std::bind([this](){
+    door1->conditionFunc = [](){
 //       return mainPlayer->inventory->has("grape");
 
 //        return ( locker->slots[0]->getString() == "0" &&
@@ -21,19 +25,7 @@ SFaseTeste1::SFaseTeste1()
 //                locker->slots[3]->getString() == "1");
 
         return true;
-    });
-
-    ghostTeste = new ES1Ghost;
-
-    ghostTeste1 = new ES1Ghost;
-    ghostTeste1->setAlias("ghostTeste1");
-
-    ghostTeste2 = new ES1Ghost;
-    ghostTeste2->setAlias("ghostTeste2");
-
-    ghostTeste3 = new ES1Ghost;
-
-    banshee = new ES1Banshee;
+    };
 
     banshee->dialogBox->addDialog("Banshee", "Ola, viajante. Voce esta agora na floresta morta.\n"
                                     "Para se chegar a entrada do templo, voce"

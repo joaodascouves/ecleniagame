@@ -7,7 +7,7 @@ class ENonPlayable : public Entity<sf::Sprite>
 {
 public:
     ENonPlayable();
-    virtual ~ENonPlayable() override {}
+    ~ENonPlayable() override = default;
 
     enum
     {

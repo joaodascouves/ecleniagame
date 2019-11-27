@@ -13,11 +13,9 @@ SCombat::SCombat(ENonPlayableHitable* entity1, ENonPlayableHitable* entity2) :
     enemy->scale(1.7f, 1.7f);
     enemy->setPosition(600, enemy->getPosition().y - 100);
 
-    actionPanel = new EPanel;
+    actionPanel = new EPanel({300, 300}, sf::Color(90, 20, 240, 50));
     spawn(actionPanel);
 
-    actionPanel->front()->setFillColor(sf::Color(90, 20, 240, 50));
-    actionPanel->front()->setSize(sf::Vector2f(300, 300));
     actionPanel->appendLine("Atacar");
     actionPanel->appendLine("Fugir");
 
@@ -39,29 +37,23 @@ SCombat::SCombat(ENonPlayableHitable* entity1, ENonPlayableHitable* entity2) :
     };
 
     actionPanel->toggleChooseable(true);
-    activatePanel(actionPanel);
+    activatePanel(std::move(actionPanel));
 
-    leftEPanel = new EPanel;
-    spawn(leftEPanel);
+    leftPanel = new EPanel({300, 200}, sf::Color(90, 20, 160, 50));
+    spawn(leftPanel);
 
-    leftEPanel->front()->setFillColor(sf::Color(90, 20, 160, 50));
-    leftEPanel->front()->setSize(sf::Vector2f(300, 200));
+    leftPanel->setPosition(0, 800);
+    leftPanel->drawableTextObjects.push_back(new sf::Text);
+    leftPanel->drawableTextObjects.back()->setFont(ResourceManager::get().getRef<sf::Font>("arial"));
+    leftPanel->drawableTextObjects.back()->setString("HP: " + std::to_string(mainPlayer->life));
 
-    leftEPanel->setPosition(0, 800);
-    leftEPanel->drawableTextObjects.push_back(new sf::Text);
-    leftEPanel->drawableTextObjects.back()->setFont(ResourceManager::get().getRef<sf::Font>("arial"));
-    leftEPanel->drawableTextObjects.back()->setString("HP: " + std::to_string(mainPlayer->life));
+    rightPanel = new EPanel({300, 200}, sf::Color(90, 20, 160, 50));
+    spawn(rightPanel);
 
-    rightEPanel = new EPanel;
-    spawn(rightEPanel);
-
-    rightEPanel->front()->setFillColor(sf::Color(90, 20, 160, 50));
-    rightEPanel->front()->setSize(sf::Vector2f(300, 200));
-
-    rightEPanel->setPosition(700, 800);
-    rightEPanel->drawableTextObjects.push_back(new sf::Text);
-    rightEPanel->drawableTextObjects.back()->setFont(ResourceManager::get().getRef<sf::Font>("arial"));
-    rightEPanel->drawableTextObjects.back()->setString("HP: " + std::to_string(enemy->life));
+    rightPanel->setPosition(700, 800);
+    rightPanel->drawableTextObjects.push_back(new sf::Text);
+    rightPanel->drawableTextObjects.back()->setFont(ResourceManager::get().getRef<sf::Font>("arial"));
+    rightPanel->drawableTextObjects.back()->setString("HP: " + std::to_string(enemy->life));
 }
 
 void SCombat::update()
@@ -69,12 +61,12 @@ void SCombat::update()
     if( challenger->front() )
     {
         challenger->update();
-        leftEPanel->drawableTextObjects.back()->setString("HP: " + std::to_string(mainPlayer->life));
+        leftPanel->drawableTextObjects.back()->setString("HP: " + std::to_string(mainPlayer->life));
     }
 
     if( enemy->front() )
     {
         enemy->update();
-        rightEPanel->drawableTextObjects.back()->setString("HP: " + std::to_string(enemy->life));
+        rightPanel->drawableTextObjects.back()->setString("HP: " + std::to_string(enemy->life));
     }
 }

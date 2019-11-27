@@ -8,8 +8,7 @@ class ENonPlayableHitable : public ENonPlayable
 public:
     ENonPlayableHitable();
     ENonPlayableHitable(const ENonPlayableHitable&);
-
-    virtual ~ENonPlayableHitable() override {}
+    ~ENonPlayableHitable() override = default;
 
     sf::Clock slapClock;
 

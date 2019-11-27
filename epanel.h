@@ -7,7 +7,8 @@
 class EPanel : public Entity<sf::RectangleShape>
 {
 public:
-    EPanel();
+    EPanel(const sf::Vector2f&, const sf::Color&);
+    ~EPanel() override = default;
 
     void appendLine(const std::string &);
     void moveChoice(const bool);

@@ -40,9 +40,11 @@ SWorld::~SWorld()
 
     for( auto& obj : worldEntitiesRect )
     {
-        obj->destroy();
-        delete obj;
+        //obj->destroy();
+        //delete obj;
     }
+
+    delete mainPlayer;
 }
 
 void SWorld::draw()
@@ -86,7 +88,7 @@ void SWorld::update()
         {
             if( auto *e = *it)
             {
-                if( !e->drawableObjects.empty() )
+                if( e->spawned )
                 {
                     if( !(e->hasClass("enonplayablehitable") && dialogBox) )
                         e->update();
@@ -95,7 +97,7 @@ void SWorld::update()
                 if( e->getPosition().x < 0 )
                     e->destroy();
 
-                if( !e->direction || e->drawableObjects.empty() )
+                if( !e->direction || !e->spawned || e->drawableObjects.empty() )
                 {
                     worldEntities.erase(it--);
                     continue;
@@ -128,112 +130,118 @@ void SWorld::update()
                     }
                 }
 
-                if( mainPlayer->getPosition().x + mainPlayer->getRelativeBounds().width >= e->getPosition().x &&
-                    mainPlayer->getPosition().x + 60 <= e->getPosition().x + e->getRelativeBounds().width )
+                if( mainPlayer->spawned )
                 {
-                    mainPlayer->currentEntity.push_back(e);
+                    if( mainPlayer->front() )
+                        mainPlayer->update();
 
-                    if( e->hasClass("es1ghost") )
+                    if( mainPlayer->getPosition().x + mainPlayer->getRelativeBounds().width >= e->getPosition().x &&
+                            mainPlayer->getPosition().x + 60 <= e->getPosition().x + e->getRelativeBounds().width )
                     {
-                        if( !currentPanel )
+                        mainPlayer->currentEntity.push_back(e);
+
+                        if( e->hasClass("es1ghost") )
                         {
-                            EPanel* combatPrompt = new EPanel;
-                            spawn(combatPrompt);
+                            if( !currentPanel )
+                            {
+                                EPanel* combatPrompt = new EPanel({300, 300}, sf::Color(30, 20, 250, 220));
+                                spawn(combatPrompt);
 
-                            combatPrompt->front()->setSize(sf::Vector2f(300, 300));
-                            combatPrompt->front()->setFillColor(sf::Color(30, 30, 250, 250));
-                            combatPrompt->appendLine("Desafiar");
-                            combatPrompt->appendLine("Ignorar");
-                            combatPrompt->toggleChooseable(true);
+                                combatPrompt->appendLine("Desafiar");
+                                combatPrompt->appendLine("Ignorar");
+                                combatPrompt->toggleChooseable(true);
 
-                            combatPrompt->actionFunc = std::move([this, e](short choice){
+                                combatPrompt->actionFunc = [this, e, &combatPrompt](short choice){
 
-                                deactivatePanel();
+                                    deactivatePanel();
 
-                                if( choice == 0 )
-                                {
-                                    SCombat* combatState  = new SCombat(
-                                                static_cast<ENonPlayableHitable*>(mainPlayer),
-                                                static_cast<ENonPlayableHitable*>(e)
-                                                );
+                                    if( choice == 0 )
+                                    {
+                                        SCombat* combatState  = new SCombat(
+                                                    static_cast<ENonPlayableHitable*>(mainPlayer),
+                                                    static_cast<ENonPlayableHitable*>(e)
+                                                    );
 
-                                    combatState->sceneryEntities.push_back(new Entity<sf::Sprite>);
-                                    combatState->sceneryEntities.back()->setTextureName("es1scenery1");
+                                        combatState->sceneryEntities.push_back(new Entity<sf::Sprite>);
+                                        combatState->sceneryEntities.back()->setTextureName("es1scenery1");
 
-                                    std::fill_n(keyPress, 7, 0);
+                                        std::fill_n(keyPress, 7, 0);
 
-                                    GameInstance::get().pushState(combatState);
-                                }
+                                        GameInstance::get().pushState(combatState);
+                                    }
 
-                            });
+                                    if( choice == 1 )
+                                    {
+                                        combatPrompt->hide();
+                                    }
 
-                            activatePanel(combatPrompt);
+                                };
+
+                                activatePanel(std::move(combatPrompt));
+                            }
+
+                            //                        ENonPlayableHitable* enemy = static_cast<ENonPlayableHitable*>(e);
+                            //                        enemy->speed = 0.5f;
+
+                            //                        if( mainPlayer->getStatus() != ENonPlayableHitable::S_HITTING &&
+                            //                                e->getStatus() != ENonPlayableHitable::S_SLAPPED &&
+                            //                                e->getStatus() != ENonPlayableHitable::S_DYING )
+                            //                        {
+                            //                            mainPlayer->slap(enemy);
+
+                            //                            if( e->direction == mainPlayer->direction &&
+                            //                                e->getPosition().x > mainPlayer->getPosition().x )
+                            //                            {
+                            //                                e->flipHorizontally();
+                            //                            }
+
+                            //                            if( !mainPlayer )
+                            //                                continue;
+                            //                        }
                         }
 
-//                        ENonPlayableHitable* enemy = static_cast<ENonPlayableHitable*>(e);
-//                        enemy->speed = 0.5f;
-
-//                        if( mainPlayer->getStatus() != ENonPlayableHitable::S_HITTING &&
-//                                e->getStatus() != ENonPlayableHitable::S_SLAPPED &&
-//                                e->getStatus() != ENonPlayableHitable::S_DYING )
-//                        {
-//                            mainPlayer->slap(enemy);
-
-//                            if( e->direction == mainPlayer->direction &&
-//                                e->getPosition().x > mainPlayer->getPosition().x )
-//                            {
-//                                e->flipHorizontally();
-//                            }
-
-//                            if( !mainPlayer )
-//                                continue;
-//                        }
-                    }
-
-                    if( e->hasClass("elocker") )
-                    {
-                        for( auto &s : static_cast<ES1Locker*>(e)->slots )
+                        if( e->hasClass("elocker") )
                         {
-                            if( mainPlayer->getPosition().x + mainPlayer->front()->getGlobalBounds().width - 170 >= e->getPosition().x + s->getPosition().x &&
-                                mainPlayer->getPosition().x <= e->getPosition().x + s->getPosition().x + s->getCharacterSize() )
+                            for( auto &s : static_cast<ES1Locker*>(e)->slots )
                             {
-                                mainPlayer->currentTextEntity.push_back(s);
+                                if( mainPlayer->getPosition().x + mainPlayer->front()->getGlobalBounds().width - 170 >= e->getPosition().x + s->getPosition().x &&
+                                        mainPlayer->getPosition().x <= e->getPosition().x + s->getPosition().x + s->getCharacterSize() )
+                                {
+                                    mainPlayer->currentTextEntity.push_back(s);
+                                }
                             }
                         }
-                    }
 
-                    if( e->hasClass("edoor") )
-                    {
-    //                    actionLabel.setString("Entrar (A)");
-    //                    actionDescription.setString("Uma porta. Para onde isso leva?");
-                    }
+                        if( e->hasClass("edoor") )
+                        {
+                            //                    actionLabel.setString("Entrar (A)");
+                            //                    actionDescription.setString("Uma porta. Para onde isso leva?");
+                        }
 
-                    if( e->hasClass("eitem") )
-                    {
-    //                    actionLabel.setString("Pegar (A)");
-    //                    actionDescription.setString("You see a " + e->getAlias() + ".\n" + e->getDescription());
-                    }
+                        if( e->hasClass("eitem") )
+                        {
+                            //                    actionLabel.setString("Pegar (A)");
+                            //                    actionDescription.setString("You see a " + e->getAlias() + ".\n" + e->getDescription());
+                        }
 
-                    if( e->hasClass("enonplayable") )
-                    {
-    //                    actionLabel.setString("Matar (A)");
-    //                    actionDescription.setString("Esse cara parece comigo.");
+                        if( e->hasClass("enonplayable") )
+                        {
+                            //                    actionLabel.setString("Matar (A)");
+                            //                    actionDescription.setString("Esse cara parece comigo.");
+                        }
                     }
                 }
             }
-        }
 
-        if( !mainPlayer->currentEntity.back() )
-        {
-            if( currentPanel )
+            if( !mainPlayer->currentEntity.back() )
             {
-                currentPanel->hide();
-                destroyPanel();
+                if( currentPanel )
+                {
+                    currentPanel->hide();
+                    destroyPanel();
+                }
             }
         }
-
-        if( mainPlayer->front() )
-            mainPlayer->update();
     }
 
 }
@@ -384,14 +392,14 @@ void SWorld::spawn(Entity<sf::Sprite> *entity)
     worldEntities.back()->index = worldEntities.size();
 }
 
-void SWorld::spawn(Entity<sf::RectangleShape> *entity)
+void SWorld::spawn(Entity<sf::RectangleShape>* entity)
 {
     entity->spawned = true;
+    entity->index = worldEntitiesRect.size() + 1;
     worldEntitiesRect.push_back(entity);
-    worldEntitiesRect.back()->index = worldEntitiesRect.size();
 }
 
-void SWorld::showDialogBox(EDialogBox *newDialogBox)
+void SWorld::showDialogBox(EDialogBox* newDialogBox)
 {
     if( mainPlayer->currentRectEntity.back() )
         return;
@@ -399,8 +407,8 @@ void SWorld::showDialogBox(EDialogBox *newDialogBox)
     if( dialogBoxIterator != worldEntitiesRect.rend() && dialogBoxIterator.base() > worldEntitiesRect.begin() )
         worldEntitiesRect.erase(--(dialogBoxIterator.base()));
 
+    spawn(newDialogBox);
     dialogBox = newDialogBox;
-    spawn(dialogBox);
 
     dialogBoxIterator = worldEntitiesRect.rbegin();
     mainPlayer->currentRectEntity.push_back(dialogBox);
@@ -412,7 +420,7 @@ void SWorld::hideDialogBox()
     mainPlayer->currentRectEntity.pop_back();
 }
 
-void SWorld::activatePanel(EPanel *panel)
+void SWorld::activatePanel(EPanel* panel)
 {
     panel->toggleActive(true);
     currentPanel = panel;

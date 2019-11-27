@@ -7,6 +7,7 @@ class EDialogBox : public Entity<sf::RectangleShape>
 {
 public:
     EDialogBox();
+    ~EDialogBox() override = default;
 
     std::vector<std::pair<sf::Text*, sf::Text*>> dialog;
 
