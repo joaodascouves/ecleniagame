@@ -1,3 +1,5 @@
+// TODO: remove pointers
+
 #include "sworld.h"
 #include "edoor.h"
 #include "resourcemanager.h"
